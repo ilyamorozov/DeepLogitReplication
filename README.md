@@ -19,10 +19,9 @@ python -m src.replicate_experiment.2_experiment_prepare_embeddings
 python -m src.replicate_experiment.3_experiment_estimation_mixed_logit
 python -m src.replicate_experiment.4_experiment_visualizations
 python -m src.replicate_experiment.5_experiment_table_model_results
-python -m src.replicate_experiment.6_experiment_compute_consumer_welfare
-python -m src.replicate_experiment.7_experiment_merger_simulations
-python -m src.replicate_experiment.8_experiment_visualize_mergers
-python -m src.replicate_experiment.9_experiment_appendix_figures
+python -m src.replicate_experiment.6_experiment_merger_simulations
+python -m src.replicate_experiment.7_experiment_visualize_mergers
+python -m src.replicate_experiment.8_experiment_appendix_figures
 ```
 
 ## Reproducing the comscore results
