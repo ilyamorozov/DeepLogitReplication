@@ -18,15 +18,12 @@ python -m src.replicate_experiment.1_experiment_generate_embeddings
 python -m src.replicate_experiment.2_experiment_prepare_embeddings
 python -m src.replicate_experiment.3_experiment_estimation_mixed_logit
 python -m src.replicate_experiment.4_experiment_visualizations
-python -m src.replicate_experiment.5_experiment_visualize_transitions
-python -m src.replicate_experiment.6_experiment_table_model_results
-python -m src.replicate_experiment.7_experiment_compute_consumer_welfare
-python -m src.replicate_experiment.8_experiment_merger_simulations
-python -m src.replicate_experiment.9_experiment_visualize_mergers
-python -m src.replicate_experiment.10_experiment_appendix_figures
+python -m src.replicate_experiment.5_experiment_table_model_results
+python -m src.replicate_experiment.6_experiment_compute_consumer_welfare
+python -m src.replicate_experiment.7_experiment_merger_simulations
+python -m src.replicate_experiment.8_experiment_visualize_mergers
+python -m src.replicate_experiment.9_experiment_appendix_figures
 ```
-
-Script 1 takes the unstructured book data in `data/experiment/input/books` and generate embeddings for the text and image and store them in `data/experiment/intermediate/embeddings`. Script 2 runs PCA on the embeddings to prepare them for the estimation procedure. Script 3 estimates the mixed logit model and stores the estimation results in `data/experiment/output/estimation_results` as an XLSX file. Script 4 generates visualizations of the estimation results and stores them in `data/experiment/output/figures`.
 
 ## Reproducing the comscore results
 
@@ -36,7 +33,7 @@ In the directory `src/replicate_comscore`, run the following Stata do file:
 stata-mp -b do 1_comscore_build_dataset.do
 ```
 
-In the project root directory, run the following:
+In the project root directory, run the following Python scripts:
 
 ```bash
 python -m src.replicate_comscore.2_comscore_generate_embeddings
@@ -45,3 +42,6 @@ python -m src.replicate_comscore.4_comscore_estimation_mixed_logit
 python -m src.replicate_comscore.5_comscore_visualize
 python -m src.replicate_comscore.6_comscore_elasticities
 ```
+## References
+
+Compiani, G., Morozov, I., & Seiler, S. (2023). Demand estimation with text and image data. SSRN Working Paper. [Link to paper](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4588941)
