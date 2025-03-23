@@ -1,0 +1,240 @@
+Category_Code,Data_Type,Total_Akaike_Weight,category1,category2,category3,category4,num_transactions,mean_price
+10060201,combined,0.002,"Clothing, Shoes & Jewelry",Men,Clothing,Active,1078.0,13.96172046661377
+10060201,descriptions,0.673,"Clothing, Shoes & Jewelry",Men,Clothing,Active,1078.0,13.96172046661377
+10060201,images,0.011,"Clothing, Shoes & Jewelry",Men,Clothing,Active,1078.0,13.96172046661377
+10060201,logit,0.000,"Clothing, Shoes & Jewelry",Men,Clothing,Active,1078.0,13.96172046661377
+10060201,reviews,0.270,"Clothing, Shoes & Jewelry",Men,Clothing,Active,1078.0,13.96172046661377
+10060201,titles,0.044,"Clothing, Shoes & Jewelry",Men,Clothing,Active,1078.0,13.96172046661377
+10060207,combined,0.009,"Clothing, Shoes & Jewelry",Men,Clothing,Shirts,913.0,13.251250267028809
+10060207,descriptions,0.023,"Clothing, Shoes & Jewelry",Men,Clothing,Shirts,913.0,13.251250267028809
+10060207,images,0.050,"Clothing, Shoes & Jewelry",Men,Clothing,Shirts,913.0,13.251250267028809
+10060207,logit,0.000,"Clothing, Shoes & Jewelry",Men,Clothing,Shirts,913.0,13.251250267028809
+10060207,reviews,0.780,"Clothing, Shoes & Jewelry",Men,Clothing,Shirts,913.0,13.251250267028809
+10060207,titles,0.137,"Clothing, Shoes & Jewelry",Men,Clothing,Shirts,913.0,13.251250267028809
+10060215,combined,0.025,"Clothing, Shoes & Jewelry",Men,Clothing,Underwear,732.0,16.73166275024414
+10060215,descriptions,0.049,"Clothing, Shoes & Jewelry",Men,Clothing,Underwear,732.0,16.73166275024414
+10060215,images,0.448,"Clothing, Shoes & Jewelry",Men,Clothing,Underwear,732.0,16.73166275024414
+10060215,logit,0.000,"Clothing, Shoes & Jewelry",Men,Clothing,Underwear,732.0,16.73166275024414
+10060215,reviews,0.408,"Clothing, Shoes & Jewelry",Men,Clothing,Underwear,732.0,16.73166275024414
+10060215,titles,0.069,"Clothing, Shoes & Jewelry",Men,Clothing,Underwear,732.0,16.73166275024414
+10110210,combined,0.004,"Clothing, Shoes & Jewelry",Women,Clothing,"Lingerie, Sleep & Lounge",552.0,15.022048950195312
+10110210,descriptions,0.139,"Clothing, Shoes & Jewelry",Women,Clothing,"Lingerie, Sleep & Lounge",552.0,15.022048950195312
+10110210,images,0.125,"Clothing, Shoes & Jewelry",Women,Clothing,"Lingerie, Sleep & Lounge",552.0,15.022048950195312
+10110210,logit,0.000,"Clothing, Shoes & Jewelry",Women,Clothing,"Lingerie, Sleep & Lounge",552.0,15.022048950195312
+10110210,reviews,0.490,"Clothing, Shoes & Jewelry",Women,Clothing,"Lingerie, Sleep & Lounge",552.0,15.022048950195312
+10110210,titles,0.241,"Clothing, Shoes & Jewelry",Women,Clothing,"Lingerie, Sleep & Lounge",552.0,15.022048950195312
+10110218,combined,0.005,"Clothing, Shoes & Jewelry",Women,Clothing,"Tops, Tees & Blouses",333.0,20.28270149230957
+10110218,descriptions,0.720,"Clothing, Shoes & Jewelry",Women,Clothing,"Tops, Tees & Blouses",333.0,20.28270149230957
+10110218,images,0.104,"Clothing, Shoes & Jewelry",Women,Clothing,"Tops, Tees & Blouses",333.0,20.28270149230957
+10110218,logit,0.000,"Clothing, Shoes & Jewelry",Women,Clothing,"Tops, Tees & Blouses",333.0,20.28270149230957
+10110218,reviews,0.075,"Clothing, Shoes & Jewelry",Women,Clothing,"Tops, Tees & Blouses",333.0,20.28270149230957
+10110218,titles,0.095,"Clothing, Shoes & Jewelry",Women,Clothing,"Tops, Tees & Blouses",333.0,20.28270149230957
+13010204,combined,0.019,Electronics,Accessories & Supplies,Audio & Video Accessories,Cables & Interconnects,644.0,9.981947898864746
+13010204,descriptions,0.416,Electronics,Accessories & Supplies,Audio & Video Accessories,Cables & Interconnects,644.0,9.981947898864746
+13010204,images,0.057,Electronics,Accessories & Supplies,Audio & Video Accessories,Cables & Interconnects,644.0,9.981947898864746
+13010204,logit,0.000,Electronics,Accessories & Supplies,Audio & Video Accessories,Cables & Interconnects,644.0,9.981947898864746
+13010204,reviews,0.032,Electronics,Accessories & Supplies,Audio & Video Accessories,Cables & Interconnects,644.0,9.981947898864746
+13010204,titles,0.476,Electronics,Accessories & Supplies,Audio & Video Accessories,Cables & Interconnects,644.0,9.981947898864746
+13060104,combined,0.002,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Cables & Accessories,726.0,14.097244262695312
+13060104,descriptions,0.156,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Cables & Accessories,726.0,14.097244262695312
+13060104,images,0.029,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Cables & Accessories,726.0,14.097244262695312
+13060104,logit,0.000,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Cables & Accessories,726.0,14.097244262695312
+13060104,reviews,0.733,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Cables & Accessories,726.0,14.097244262695312
+13060104,titles,0.080,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Cables & Accessories,726.0,14.097244262695312
+13060112,combined,0.043,Electronics,Computers & Accessories,Computer Accessories & Peripherals,"Keyboards, Mice & Accessories",656.0,20.646076202392578
+13060112,descriptions,0.313,Electronics,Computers & Accessories,Computer Accessories & Peripherals,"Keyboards, Mice & Accessories",656.0,20.646076202392578
+13060112,images,0.401,Electronics,Computers & Accessories,Computer Accessories & Peripherals,"Keyboards, Mice & Accessories",656.0,20.646076202392578
+13060112,logit,0.000,Electronics,Computers & Accessories,Computer Accessories & Peripherals,"Keyboards, Mice & Accessories",656.0,20.646076202392578
+13060112,reviews,0.096,Electronics,Computers & Accessories,Computer Accessories & Peripherals,"Keyboards, Mice & Accessories",656.0,20.646076202392578
+13060112,titles,0.146,Electronics,Computers & Accessories,Computer Accessories & Peripherals,"Keyboards, Mice & Accessories",656.0,20.646076202392578
+13060114,combined,0.000,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Memory Cards,280.0,12.26
+13060114,descriptions,0.254,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Memory Cards,280.0,12.26
+13060114,images,0.745,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Memory Cards,280.0,12.26
+13060114,logit,0.000,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Memory Cards,280.0,12.26
+13060114,reviews,0.000,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Memory Cards,280.0,12.26
+13060114,titles,0.001,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Memory Cards,280.0,12.26
+13060404,combined,0.000,Electronics,Computers & Accessories,Computers & Tablets,Tablets,593.0,149.31
+13060404,descriptions,0.000,Electronics,Computers & Accessories,Computers & Tablets,Tablets,593.0,149.31
+13060404,images,1.000,Electronics,Computers & Accessories,Computers & Tablets,Tablets,593.0,149.31
+13060404,logit,0.000,Electronics,Computers & Accessories,Computers & Tablets,Tablets,593.0,149.31
+13060404,reviews,0.000,Electronics,Computers & Accessories,Computers & Tablets,Tablets,593.0,149.31
+13060404,titles,0.000,Electronics,Computers & Accessories,Computers & Tablets,Tablets,593.0,149.31
+13060701,combined,0.000,Electronics,Computers & Accessories,Monitors,Monitors,278.0,127.0
+13060701,descriptions,0.016,Electronics,Computers & Accessories,Monitors,Monitors,278.0,127.0
+13060701,images,0.003,Electronics,Computers & Accessories,Monitors,Monitors,278.0,127.0
+13060701,logit,0.000,Electronics,Computers & Accessories,Monitors,Monitors,278.0,127.0
+13060701,reviews,0.976,Electronics,Computers & Accessories,Monitors,Monitors,278.0,127.0
+13060701,titles,0.004,Electronics,Computers & Accessories,Monitors,Monitors,278.0,127.0
+13110101,combined,0.023,Electronics,Headphones,Earbud Headphones,Earbud Headphones,1598.0,81.51
+13110101,descriptions,0.968,Electronics,Headphones,Earbud Headphones,Earbud Headphones,1598.0,81.51
+13110101,images,0.006,Electronics,Headphones,Earbud Headphones,Earbud Headphones,1598.0,81.51
+13110101,logit,0.000,Electronics,Headphones,Earbud Headphones,Earbud Headphones,1598.0,81.51
+13110101,titles,0.002,Electronics,Headphones,Earbud Headphones,Earbud Headphones,1598.0,81.51
+13181001,combined,0.000,Electronics,Television & Video,Streaming Media Players,Streaming Media Players,2470.0,55.1854362487793
+13181001,descriptions,0.051,Electronics,Television & Video,Streaming Media Players,Streaming Media Players,2470.0,55.1854362487793
+13181001,images,0.000,Electronics,Television & Video,Streaming Media Players,Streaming Media Players,2470.0,55.1854362487793
+13181001,logit,0.000,Electronics,Television & Video,Streaming Media Players,Streaming Media Players,2470.0,55.1854362487793
+13181001,reviews,0.949,Electronics,Television & Video,Streaming Media Players,Streaming Media Players,2470.0,55.1854362487793
+13181001,titles,0.000,Electronics,Television & Video,Streaming Media Players,Streaming Media Players,2470.0,55.1854362487793
+14020210,combined,0.032,Grocery & Gourmet Food,Beverages,"Bottled Beverages, Water & Drink Mixes",Water,507.0,10.54195785522461
+14020210,descriptions,0.389,Grocery & Gourmet Food,Beverages,"Bottled Beverages, Water & Drink Mixes",Water,507.0,10.54195785522461
+14020210,images,0.322,Grocery & Gourmet Food,Beverages,"Bottled Beverages, Water & Drink Mixes",Water,507.0,10.54195785522461
+14020210,logit,0.000,Grocery & Gourmet Food,Beverages,"Bottled Beverages, Water & Drink Mixes",Water,507.0,10.54195785522461
+14020210,reviews,0.081,Grocery & Gourmet Food,Beverages,"Bottled Beverages, Water & Drink Mixes",Water,507.0,10.54195785522461
+14020210,titles,0.176,Grocery & Gourmet Food,Beverages,"Bottled Beverages, Water & Drink Mixes",Water,507.0,10.54195785522461
+14020605,combined,0.116,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Coffee,1000.0,31.875690460205078
+14020605,descriptions,0.097,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Coffee,1000.0,31.875690460205078
+14020605,images,0.508,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Coffee,1000.0,31.875690460205078
+14020605,logit,0.000,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Coffee,1000.0,31.875690460205078
+14020605,reviews,0.074,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Coffee,1000.0,31.875690460205078
+14020605,titles,0.204,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Coffee,1000.0,31.875690460205078
+14020608,combined,0.009,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Tea,427.0,15.68187427520752
+14020608,descriptions,0.073,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Tea,427.0,15.68187427520752
+14020608,images,0.174,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Tea,427.0,15.68187427520752
+14020608,logit,0.000,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Tea,427.0,15.68187427520752
+14020608,reviews,0.099,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Tea,427.0,15.68187427520752
+14020608,titles,0.644,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Tea,427.0,15.68187427520752
+14180404,combined,0.114,Grocery & Gourmet Food,Snack Foods,Chips & Crisps,Potato,448.0,13.418075561523438
+14180404,descriptions,0.148,Grocery & Gourmet Food,Snack Foods,Chips & Crisps,Potato,448.0,13.418075561523438
+14180404,images,0.243,Grocery & Gourmet Food,Snack Foods,Chips & Crisps,Potato,448.0,13.418075561523438
+14180404,logit,0.002,Grocery & Gourmet Food,Snack Foods,Chips & Crisps,Potato,448.0,13.418075561523438
+14180404,reviews,0.206,Grocery & Gourmet Food,Snack Foods,Chips & Crisps,Potato,448.0,13.418075561523438
+14180404,titles,0.288,Grocery & Gourmet Food,Snack Foods,Chips & Crisps,Potato,448.0,13.418075561523438
+16030103,combined,0.564,Health & Household,Health Care,Alternative Medicine,Aromatherapy,794.0,13.388595581054688
+16030103,descriptions,0.153,Health & Household,Health Care,Alternative Medicine,Aromatherapy,794.0,13.388595581054688
+16030103,images,0.028,Health & Household,Health Care,Alternative Medicine,Aromatherapy,794.0,13.388595581054688
+16030103,logit,0.000,Health & Household,Health Care,Alternative Medicine,Aromatherapy,794.0,13.388595581054688
+16030103,reviews,0.018,Health & Household,Health Care,Alternative Medicine,Aromatherapy,794.0,13.388595581054688
+16030103,titles,0.237,Health & Household,Health Care,Alternative Medicine,Aromatherapy,794.0,13.388595581054688
+16040408,combined,0.005,Health & Household,Household Supplies,Household Batteries,AAA,1610.0,10.795845985412598
+16040408,descriptions,0.083,Health & Household,Household Supplies,Household Batteries,AAA,1610.0,10.795845985412598
+16040408,images,0.165,Health & Household,Household Supplies,Household Batteries,AAA,1610.0,10.795845985412598
+16040408,logit,0.000,Health & Household,Household Supplies,Household Batteries,AAA,1610.0,10.795845985412598
+16040408,reviews,0.687,Health & Household,Household Supplies,Household Batteries,AAA,1610.0,10.795845985412598
+16040408,titles,0.060,Health & Household,Household Supplies,Household Batteries,AAA,1610.0,10.795845985412598
+16041006,combined,0.004,Health & Household,Household Supplies,Paper & Plastic,Paper & Plastic,923.0,21.764205932617188
+16041006,descriptions,0.141,Health & Household,Household Supplies,Paper & Plastic,Paper & Plastic,923.0,21.764205932617188
+16041006,images,0.029,Health & Household,Household Supplies,Paper & Plastic,Paper & Plastic,923.0,21.764205932617188
+16041006,logit,0.000,Health & Household,Household Supplies,Paper & Plastic,Paper & Plastic,923.0,21.764205932617188
+16041006,reviews,0.410,Health & Household,Household Supplies,Paper & Plastic,Paper & Plastic,923.0,21.764205932617188
+16041006,titles,0.416,Health & Household,Household Supplies,Paper & Plastic,Paper & Plastic,923.0,21.764205932617188
+16041007,combined,0.008,Health & Household,Household Supplies,Paper & Plastic,Paper Towels,728.0,21.6958065032959
+16041007,descriptions,0.005,Health & Household,Household Supplies,Paper & Plastic,Paper Towels,728.0,21.6958065032959
+16041007,images,0.007,Health & Household,Household Supplies,Paper & Plastic,Paper Towels,728.0,21.6958065032959
+16041007,logit,0.000,Health & Household,Household Supplies,Paper & Plastic,Paper Towels,728.0,21.6958065032959
+16041007,reviews,0.018,Health & Household,Household Supplies,Paper & Plastic,Paper Towels,728.0,21.6958065032959
+16041007,titles,0.962,Health & Household,Household Supplies,Paper & Plastic,Paper Towels,728.0,21.6958065032959
+17021806,combined,0.011,Home & Kitchen,Bedding,Sheets & Pillowcases,Sheet & Pillowcase Sets,864.0,30.230554580688477
+17021806,descriptions,0.265,Home & Kitchen,Bedding,Sheets & Pillowcases,Sheet & Pillowcase Sets,864.0,30.230554580688477
+17021806,images,0.230,Home & Kitchen,Bedding,Sheets & Pillowcases,Sheet & Pillowcase Sets,864.0,30.230554580688477
+17021806,logit,0.000,Home & Kitchen,Bedding,Sheets & Pillowcases,Sheet & Pillowcase Sets,864.0,30.230554580688477
+17021806,reviews,0.231,Home & Kitchen,Bedding,Sheets & Pillowcases,Sheet & Pillowcase Sets,864.0,30.230554580688477
+17021806,titles,0.264,Home & Kitchen,Bedding,Sheets & Pillowcases,Sheet & Pillowcase Sets,864.0,30.230554580688477
+17050304,combined,0.117,Home & Kitchen,Furniture,Bedroom Furniture,"Beds, Frames & Bases",360.0,146.30960083007812
+17050304,descriptions,0.193,Home & Kitchen,Furniture,Bedroom Furniture,"Beds, Frames & Bases",360.0,146.30960083007812
+17050304,images,0.188,Home & Kitchen,Furniture,Bedroom Furniture,"Beds, Frames & Bases",360.0,146.30960083007812
+17050304,logit,0.001,Home & Kitchen,Furniture,Bedroom Furniture,"Beds, Frames & Bases",360.0,146.30960083007812
+17050304,reviews,0.361,Home & Kitchen,Furniture,Bedroom Furniture,"Beds, Frames & Bases",360.0,146.30960083007812
+17050304,titles,0.140,Home & Kitchen,Furniture,Bedroom Furniture,"Beds, Frames & Bases",360.0,146.30960083007812
+17050306,combined,0.035,Home & Kitchen,Furniture,Bedroom Furniture,Mattresses & Box Springs,376.0,202.8076629638672
+17050306,descriptions,0.354,Home & Kitchen,Furniture,Bedroom Furniture,Mattresses & Box Springs,376.0,202.8076629638672
+17050306,images,0.164,Home & Kitchen,Furniture,Bedroom Furniture,Mattresses & Box Springs,376.0,202.8076629638672
+17050306,logit,0.000,Home & Kitchen,Furniture,Bedroom Furniture,Mattresses & Box Springs,376.0,202.8076629638672
+17050306,reviews,0.177,Home & Kitchen,Furniture,Bedroom Furniture,Mattresses & Box Springs,376.0,202.8076629638672
+17050306,titles,0.270,Home & Kitchen,Furniture,Bedroom Furniture,Mattresses & Box Springs,376.0,202.8076629638672
+17111205,combined,0.099,Home & Kitchen,Kitchen & Dining,Storage & Organization,Food Storage,382.0,24.747821807861328
+17111205,descriptions,0.150,Home & Kitchen,Kitchen & Dining,Storage & Organization,Food Storage,382.0,24.747821807861328
+17111205,images,0.690,Home & Kitchen,Kitchen & Dining,Storage & Organization,Food Storage,382.0,24.747821807861328
+17111205,logit,0.000,Home & Kitchen,Kitchen & Dining,Storage & Organization,Food Storage,382.0,24.747821807861328
+17111205,reviews,0.029,Home & Kitchen,Kitchen & Dining,Storage & Organization,Food Storage,382.0,24.747821807861328
+17111205,titles,0.032,Home & Kitchen,Kitchen & Dining,Storage & Organization,Food Storage,382.0,24.747821807861328
+21010906,combined,0.001,Office Products,Office & School Supplies,Filing Products,Folders,538.0,12.40532398223877
+21010906,descriptions,0.109,Office Products,Office & School Supplies,Filing Products,Folders,538.0,12.40532398223877
+21010906,images,0.057,Office Products,Office & School Supplies,Filing Products,Folders,538.0,12.40532398223877
+21010906,logit,0.000,Office Products,Office & School Supplies,Filing Products,Folders,538.0,12.40532398223877
+21010906,reviews,0.000,Office Products,Office & School Supplies,Filing Products,Folders,538.0,12.40532398223877
+21010906,titles,0.834,Office Products,Office & School Supplies,Filing Products,Folders,538.0,12.40532398223877
+21011403,combined,0.029,Office Products,Office & School Supplies,Paper,Copy & Printing Paper,876.0,35.35289764404297
+21011403,descriptions,0.001,Office Products,Office & School Supplies,Paper,Copy & Printing Paper,876.0,35.35289764404297
+21011403,images,0.723,Office Products,Office & School Supplies,Paper,Copy & Printing Paper,876.0,35.35289764404297
+21011403,logit,0.000,Office Products,Office & School Supplies,Paper,Copy & Printing Paper,876.0,35.35289764404297
+21011403,reviews,0.123,Office Products,Office & School Supplies,Paper,Copy & Printing Paper,876.0,35.35289764404297
+21011403,titles,0.124,Office Products,Office & School Supplies,Paper,Copy & Printing Paper,876.0,35.35289764404297
+21012004,combined,0.007,Office Products,Office & School Supplies,Writing & Correction Supplies,Markers & Highlighters,547.0,8.665539741516113
+21012004,descriptions,0.142,Office Products,Office & School Supplies,Writing & Correction Supplies,Markers & Highlighters,547.0,8.665539741516113
+21012004,images,0.818,Office Products,Office & School Supplies,Writing & Correction Supplies,Markers & Highlighters,547.0,8.665539741516113
+21012004,logit,0.000,Office Products,Office & School Supplies,Writing & Correction Supplies,Markers & Highlighters,547.0,8.665539741516113
+21012004,reviews,0.016,Office Products,Office & School Supplies,Writing & Correction Supplies,Markers & Highlighters,547.0,8.665539741516113
+21012004,titles,0.017,Office Products,Office & School Supplies,Writing & Correction Supplies,Markers & Highlighters,547.0,8.665539741516113
+21012008,combined,0.067,Office Products,Office & School Supplies,Writing & Correction Supplies,Pens & Refills,518.0,24.91851234436035
+21012008,descriptions,0.109,Office Products,Office & School Supplies,Writing & Correction Supplies,Pens & Refills,518.0,24.91851234436035
+21012008,images,0.306,Office Products,Office & School Supplies,Writing & Correction Supplies,Pens & Refills,518.0,24.91851234436035
+21012008,logit,0.001,Office Products,Office & School Supplies,Writing & Correction Supplies,Pens & Refills,518.0,24.91851234436035
+21012008,reviews,0.056,Office Products,Office & School Supplies,Writing & Correction Supplies,Pens & Refills,518.0,24.91851234436035
+21012008,titles,0.462,Office Products,Office & School Supplies,Writing & Correction Supplies,Pens & Refills,518.0,24.91851234436035
+21021101,combined,0.097,Office Products,Office Electronics,Printers & Accessories,Printer Parts & Accessories,741.0,59.9017448425293
+21021101,descriptions,0.301,Office Products,Office Electronics,Printers & Accessories,Printer Parts & Accessories,741.0,59.9017448425293
+21021101,images,0.156,Office Products,Office Electronics,Printers & Accessories,Printer Parts & Accessories,741.0,59.9017448425293
+21021101,logit,0.000,Office Products,Office Electronics,Printers & Accessories,Printer Parts & Accessories,741.0,59.9017448425293
+21021101,reviews,0.008,Office Products,Office Electronics,Printers & Accessories,Printer Parts & Accessories,741.0,59.9017448425293
+21021101,titles,0.438,Office Products,Office Electronics,Printers & Accessories,Printer Parts & Accessories,741.0,59.9017448425293
+23021004,combined,0.021,Pet Supplies,Cats,Food,Wet,414.0,13.86228084564209
+23021004,descriptions,0.191,Pet Supplies,Cats,Food,Wet,414.0,13.86228084564209
+23021004,images,0.340,Pet Supplies,Cats,Food,Wet,414.0,13.86228084564209
+23021004,logit,0.001,Pet Supplies,Cats,Food,Wet,414.0,13.86228084564209
+23021004,reviews,0.121,Pet Supplies,Cats,Food,Wet,414.0,13.86228084564209
+23021004,titles,0.325,Pet Supplies,Cats,Food,Wet,414.0,13.86228084564209
+23021309,combined,0.045,Pet Supplies,Cats,Litter & Housebreaking,Litter,347.0,21.821752548217773
+23021309,descriptions,0.259,Pet Supplies,Cats,Litter & Housebreaking,Litter,347.0,21.821752548217773
+23021309,images,0.055,Pet Supplies,Cats,Litter & Housebreaking,Litter,347.0,21.821752548217773
+23021309,logit,0.000,Pet Supplies,Cats,Litter & Housebreaking,Litter,347.0,21.821752548217773
+23021309,reviews,0.058,Pet Supplies,Cats,Litter & Housebreaking,Litter,347.0,21.821752548217773
+23021309,titles,0.583,Pet Supplies,Cats,Litter & Housebreaking,Litter,347.0,21.821752548217773
+23021802,combined,0.016,Pet Supplies,Cats,Treats,Snacks,468.0,11.89913272857666
+23021802,descriptions,0.130,Pet Supplies,Cats,Treats,Snacks,468.0,11.89913272857666
+23021802,images,0.574,Pet Supplies,Cats,Treats,Snacks,468.0,11.89913272857666
+23021802,logit,0.000,Pet Supplies,Cats,Treats,Snacks,468.0,11.89913272857666
+23021802,reviews,0.197,Pet Supplies,Cats,Treats,Snacks,468.0,11.89913272857666
+23021802,titles,0.083,Pet Supplies,Cats,Treats,Snacks,468.0,11.89913272857666
+23031107,combined,0.016,Pet Supplies,Dogs,Food,Wet,350.0,17.949806213378906
+23031107,descriptions,0.069,Pet Supplies,Dogs,Food,Wet,350.0,17.949806213378906
+23031107,images,0.242,Pet Supplies,Dogs,Food,Wet,350.0,17.949806213378906
+23031107,logit,0.000,Pet Supplies,Dogs,Food,Wet,350.0,17.949806213378906
+23031107,reviews,0.027,Pet Supplies,Dogs,Food,Wet,350.0,17.949806213378906
+23031107,titles,0.646,Pet Supplies,Dogs,Food,Wet,350.0,17.949806213378906
+23031904,combined,0.020,Pet Supplies,Dogs,Treats,"Cookies, Biscuits & Snacks",482.0,15.223137855529785
+23031904,descriptions,0.167,Pet Supplies,Dogs,Treats,"Cookies, Biscuits & Snacks",482.0,15.223137855529785
+23031904,images,0.116,Pet Supplies,Dogs,Treats,"Cookies, Biscuits & Snacks",482.0,15.223137855529785
+23031904,logit,0.000,Pet Supplies,Dogs,Treats,"Cookies, Biscuits & Snacks",482.0,15.223137855529785
+23031904,reviews,0.605,Pet Supplies,Dogs,Treats,"Cookies, Biscuits & Snacks",482.0,15.223137855529785
+23031904,titles,0.092,Pet Supplies,Dogs,Treats,"Cookies, Biscuits & Snacks",482.0,15.223137855529785
+27040201,combined,0.030,Video Games,Nintendo Switch,Consoles,Consoles,312.0,199.80755615234375
+27040201,descriptions,0.334,Video Games,Nintendo Switch,Consoles,Consoles,312.0,199.80755615234375
+27040201,images,0.189,Video Games,Nintendo Switch,Consoles,Consoles,312.0,199.80755615234375
+27040201,logit,0.001,Video Games,Nintendo Switch,Consoles,Consoles,312.0,199.80755615234375
+27040201,reviews,0.084,Video Games,Nintendo Switch,Consoles,Consoles,312.0,199.80755615234375
+27040201,titles,0.361,Video Games,Nintendo Switch,Consoles,Consoles,312.0,199.80755615234375
+27040301,combined,0.002,Video Games,Nintendo Switch,Games,Games,527.0,50.81248092651367
+27040301,descriptions,0.000,Video Games,Nintendo Switch,Games,Games,527.0,50.81248092651367
+27040301,images,0.994,Video Games,Nintendo Switch,Games,Games,527.0,50.81248092651367
+27040301,logit,0.000,Video Games,Nintendo Switch,Games,Games,527.0,50.81248092651367
+27040301,reviews,0.004,Video Games,Nintendo Switch,Games,Games,527.0,50.81248092651367
+27040301,titles,0.000,Video Games,Nintendo Switch,Games,Games,527.0,50.81248092651367
+27060103,combined,0.084,Video Games,PC,Accessories,Gaming Keyboards,286.0,65.49876403808594
+27060103,descriptions,0.084,Video Games,PC,Accessories,Gaming Keyboards,286.0,65.49876403808594
+27060103,images,0.514,Video Games,PC,Accessories,Gaming Keyboards,286.0,65.49876403808594
+27060103,logit,0.000,Video Games,PC,Accessories,Gaming Keyboards,286.0,65.49876403808594
+27060103,reviews,0.043,Video Games,PC,Accessories,Gaming Keyboards,286.0,65.49876403808594
+27060103,titles,0.275,Video Games,PC,Accessories,Gaming Keyboards,286.0,65.49876403808594
+27070401,combined,0.000,Video Games,PlayStation 4,Games,Games,447.0,53.215213775634766
+27070401,descriptions,0.497,Video Games,PlayStation 4,Games,Games,447.0,53.215213775634766
+27070401,images,0.085,Video Games,PlayStation 4,Games,Games,447.0,53.215213775634766
+27070401,logit,0.000,Video Games,PlayStation 4,Games,Games,447.0,53.215213775634766
+27070401,reviews,0.001,Video Games,PlayStation 4,Games,Games,447.0,53.215213775634766
+27070401,titles,0.416,Video Games,PlayStation 4,Games,Games,447.0,53.215213775634766
+27100401,combined,0.000,Video Games,Xbox One,Games,Games,378.0,44.45339584350586
+27100401,descriptions,0.000,Video Games,Xbox One,Games,Games,378.0,44.45339584350586
+27100401,images,0.026,Video Games,Xbox One,Games,Games,378.0,44.45339584350586
+27100401,logit,0.000,Video Games,Xbox One,Games,Games,378.0,44.45339584350586
+27100401,reviews,0.973,Video Games,Xbox One,Games,Games,378.0,44.45339584350586
+27100401,titles,0.000,Video Games,Xbox One,Games,Games,378.0,44.45339584350586

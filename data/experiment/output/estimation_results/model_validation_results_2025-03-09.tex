@@ -1,0 +1,53 @@
+\resizebox{\textwidth}{!}{
+\centering
+\begin{tabular}{l c c c c c}
+\toprule
+& \multicolumn{2}{c}{First Choices (Data)} & \multicolumn{3}{c}{Second Choices (Counterfactual)} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-6}
+Model & $\log L$ & \textit{AIC} & \textit{RMSE} & \multicolumn{2}{c}{Relative to Plain Logit} \\
+ && & & $\Delta$ & \% \\
+\midrule
+\addlinespace
+\multicolumn{6}{l}{\textbf{\textit{Panel A. Benchmark Model}}} \\
+\addlinespace
+Plain Logit & -20488.4 & 41006.7 & 0.089 &  &  \\
+\addlinespace
+\multicolumn{6}{l}{\textbf{\textit{Panel B. Mixed Logit Models with Principal Components}}} \\
+\addlinespace
+Images: InceptionV3 & -20475.8 & 40985.6 & 0.080 & -0.009 & -9.8\% \\
+Images: ResNet50 & -20479.9 & 40991.8 & 0.080 & -0.009 & -9.8\% \\
+Images: VGG19 & -20481.2 & 40994.4 & 0.083 & -0.006 & -6.8\% \\
+Images: Xception & -20479.1 & 40990.3 & 0.086 & -0.003 & -3.1\% \\
+Product Titles: Bag-of-Words Count & -20479.3 & 40992.7 & 0.085 & -0.004 & -4.5\% \\
+Product Titles: Bag-of-Words TF-IDF & -20479.3 & 40992.7 & 0.085 & -0.004 & -4.6\% \\
+Product Titles: Sentence Encoder (USE) & -20479.1 & 40992.2 & 0.080 & -0.009 & -10.5\% \\
+Product Titles: Sentence Transformer (ST) & -20477.2 & 40986.5 & 0.082 & -0.006 & -7.1\% \\
+Descriptions: Bag-of-Words Count & -20480.1 & 40992.2 & 0.089 & -0.000 & -0.2\% \\
+Descriptions: Bag-of-Words TF-IDF & -20480.2 & 40992.3 & 0.089 & -0.000 & -0.2\% \\
+Descriptions: Sentence Encoder (USE) & -20476.2 & 40984.4 & 0.075 & -0.014 & -15.5\% \\
+Descriptions: Sentence Transformer (ST) & -20475.8 & 40983.6 & 0.073 & -0.016 & -18.0\% \\
+Reviews: Bag-of-Words Count & -20481.0 & 40995.9 & 0.084 & -0.005 & -5.2\% \\
+Reviews: Bag-of-Words TF-IDF & -20480.9 & 40995.7 & 0.084 & -0.005 & -5.1\% \\
+\underline{Reviews: Sentence Encoder (USE)} & \underline{-20472.0} & \underline{40975.9} & \underline{0.069} & \underline{-0.020} & \underline{-22.3\%} \\
+Reviews: Sentence Transformer (ST) & -20473.3 & 40978.6 & 0.072 & -0.017 & -18.8\% \\
+\addlinespace
+\multicolumn{6}{l}{\textbf{\textit{Panel C. Attribute-Based Mixed Logit Models}}} \\
+\addlinespace
+Price & -20485.9 & 41003.9 & 0.088 & -0.001 & -0.8\% \\
+Pages & -20484.9 & 41001.7 & 0.083 & -0.006 & -6.8\% \\
+Year & -20484.7 & 41001.4 & 0.087 & -0.002 & -2.0\% \\
+Genre & -20483.3 & 41000.7 & 0.081 & -0.008 & -8.9\% \\
+Price \& Pages & -20478.9 & 40991.9 & 0.077 & -0.012 & -13.0\% \\
+Price \& Year & -20484.1 & 41002.2 & 0.088 & -0.001 & -1.4\% \\
+Price \& Genre & -20483.2 & 41002.5 & 0.080 & -0.008 & -9.4\% \\
+Pages \& Year & -20478.3 & 40990.7 & 0.077 & -0.011 & -12.9\% \\
+Pages \& Genre & -20481.6 & 40999.2 & 0.076 & -0.013 & -14.9\% \\
+Year \& Genre & -20483.3 & 41000.7 & 0.081 & -0.008 & -8.9\% \\
+Price, Pages, \& Year & -20478.3 & 40990.7 & 0.077 & -0.011 & -12.9\% \\
+Price, Pages, \& Genre & -20478.9 & 40991.9 & 0.077 & -0.012 & -13.0\% \\
+Price, Year, \& Genre & -20482.2 & 41002.4 & 0.079 & -0.010 & -11.2\% \\
+Pages, Year, \& Genre & -20478.3 & 40990.7 & 0.077 & -0.011 & -12.9\% \\
+Price, Pages, Year, \& Genre (All Attr.) & -20476.9 & 40993.9 & 0.076 & -0.013 & -14.4\% \\
+\bottomrule
+\end{tabular}
+}
