@@ -808,19 +808,19 @@ def main(num_pcs: int = 6):
 
         output_path = os.path.join(selected_model_scatters_dir, filename)
         if metric == "first_choice_ll":
-            fig_title = "Mixed Logit with Principal Components"
+            fig_title = "Comparison of Demand Models (First Choice Log-Likelihood)"
             x_label = "First Choice Log-Likelihood (LL)"
         elif metric == "first_choice_aic":
-            fig_title = "Mixed Logit with Principal Components"
+            fig_title = "Comparison of Demand Models (First Choice AIC)"
             x_label = "First Choice AIC"
         elif metric == "second_choice_rmse":
-            fig_title = "Mixed Logit with Principal Components"
+            fig_title = "Comparison of Demand Models (Counterfactual RMSE)"
             x_label = "Counterfactual RMSE (Second Choices)"
         elif metric == "second_choice_mae":
-            fig_title = "Mixed Logit with Principal Components"
+            fig_title = "Comparison of Demand Models (Counterfactual MAE)"
             x_label = "Counterfactual MAE (Second Choices)"
         else:
-            fig_title = "Mixed Logit with Principal Components"
+            fig_title = "Comparison of Demand Models (Counterfactual Log-Likelihood)"
             x_label = "Counterfactual Log-Likelihood (Second Choices)"
         if selection == "attribute":
             fig_title = "Attribute-Based Mixed Logit Specifications"

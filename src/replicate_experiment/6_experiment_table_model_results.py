@@ -6,7 +6,7 @@ import os
 from src.helper_functions.file_structure.get_file_path_from_config import get_file_path_from_config
 
 def best_aic_by_group(best_aic: pd.DataFrame):
-    groups = ["plain logit", "observables", "images", "titles", "descriptions", "reviews"]
+    groups = ["plain logit", "attributes", "images", "titles", "descriptions", "reviews"]
 
     results = []
 
@@ -21,7 +21,7 @@ def best_aic_by_group(best_aic: pd.DataFrame):
 def fmt_model_groups(name: str):
     if "plain logit" in name.lower():
         return "Plain Logit"
-    if "observables" in name.lower():
+    if "observables" in name.lower() or "attributes" in name.lower():
         return "Mixed Logit with Attributes"
     if "images" in name.lower():
         return f"Mixed Logit with Images ({name.split(' ')[-1]})"
@@ -74,8 +74,8 @@ def generate_mixed_logit_table(xlsx_path, output_tex_validation, output_tex_sele
 
     # Plain logit is the benchmark model
     panel_a = attrib_based[attrib_based["Model"] == "Benchmarks: Plain Logit"].copy()
-    # Everything in Best AIC goes to Panel B except Plain Logit
-    panel_b = best_aic[best_aic["Model"] != "Benchmarks: Plain Logit"].copy()
+    # Everything in Best AIC goes to Panel B except Plain Logit and Mixed Logit with Attributes
+    panel_b = best_aic[(best_aic["Model"] != "Benchmarks: Plain Logit") & (best_aic["Model"] != "Benchmarks: Mixed Logit with Attributes")].copy()
     panel_b = panel_b[panel_b["Model"] != "Other: Combined"]
     # Everything in Attribute-Based goes to Panel C except Plain Logit
     panel_c = attrib_based[attrib_based["Model"] != "Benchmarks: Plain Logit"].copy()
@@ -167,7 +167,7 @@ def generate_mixed_logit_table(xlsx_path, output_tex_validation, output_tex_sele
         delta = fmt_num(row["Delta"])
         pct = fmt_percent(row["Percent"])
 
-        if model == "Reviews: Sentence Encoder (USE)":
+        if row["AIC"] == min(panel_b["AIC"]):
             # underline this row
             lines.append(
                 f"\\underline{{{model}}} & \\underline{{{logl}}} & \\underline{{{aic}}} & \\underline{{{rmse}}} & \\underline{{{delta}}} & \\underline{{{pct}}} \\\\"
@@ -178,7 +178,7 @@ def generate_mixed_logit_table(xlsx_path, output_tex_validation, output_tex_sele
     # 9. Panel C
     lines.append(r"\addlinespace")
     lines.append(
-        r"\multicolumn{6}{l}{\textbf{\textit{Panel C. Attribute-Based Mixed Logit Models}}} \\"
+        r"\multicolumn{6}{l}{\textbf{\textit{Panel C. Mixed Logit with Observed Attributes}}} \\"
     )
     lines.append(r"\addlinespace")
     for _, row in panel_c.iterrows():
@@ -189,7 +189,13 @@ def generate_mixed_logit_table(xlsx_path, output_tex_validation, output_tex_sele
         delta = fmt_num(row["Delta"])
         pct = fmt_percent(row["Percent"])
 
-        lines.append(f"{model} & {logl} & {aic} & {rmse} & {delta} & {pct} \\\\")
+        if row["AIC"] == min(panel_c["AIC"]):
+            # underline this row
+            lines.append(
+                f"\\underline{{{model}}} & \\underline{{{logl}}} & \\underline{{{aic}}} & \\underline{{{rmse}}} & \\underline{{{delta}}} & \\underline{{{pct}}} \\\\"
+            )
+        else:
+            lines.append(f"{model} & {logl} & {aic} & {rmse} & {delta} & {pct} \\\\")
 
     # 10. Finish table
     lines.append(r"\bottomrule")
@@ -222,7 +228,6 @@ def generate_mixed_logit_table(xlsx_path, output_tex_validation, output_tex_sele
             random_coeffs = fmt_spec(str(row["Specification"]))
         else:
             random_coeffs = "None"
-        print(random_coeffs)
         aic = fmt_num(row["AIC"], decimals=1)
         delta_aic = fmt_num(float(aic) - float(plain_logit_aic), decimals=1)
         line = (

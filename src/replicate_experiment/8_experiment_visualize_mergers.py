@@ -92,7 +92,7 @@ def main(file_path, output_dir, tex_dir):
         # Build latex table which presents merger simulation results for each book
         lines = []
         lines.append(r"\begin{centering}")
-        lines.append(r"\begin{tabular}{>{\raggedright}p{7.5cm}>{\raggedright}p{3cm}>{\centering}p{2cm}>{\centering}p{2cm}}")
+        lines.append(r"\begin{tabular}{>{\raggedright}p{5cm}>{\raggedright}p{2cm}>{\centering}p{2cm}>{\centering}p{2cm}}")
         lines.append(r"\hline")
         lines.append(r"{\footnotesize\textbf{Book}} & {\footnotesize\textbf{Plain Logit}} & {\footnotesize\textbf{Mixed Logit with Attributes}} & {\footnotesize\textbf{Mixed Logit with Texts}}\tabularnewline")
         lines.append(r"\hline")
