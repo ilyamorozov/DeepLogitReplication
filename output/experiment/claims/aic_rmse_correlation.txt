@@ -1,0 +1,20 @@
+=== Summary ===
+All Results: 2064 rows
+Algo 1 Models: 1040 rows
+
+Best Models: 17 rows
+
+=== Correlation (All Results) ===
+                    First Choice AIC  Second Choice RMSE
+First Choice AIC            1.000000            0.760935
+Second Choice RMSE          0.760935            1.000000
+
+=== Correlation (Algorithm 1) ===
+                    First Choice AIC  Second Choice RMSE
+First Choice AIC             1.00000             0.78028
+Second Choice RMSE           0.78028             1.00000
+
+=== Correlation (Best Models) ===
+                    First Choice AIC  Second Choice RMSE
+First Choice AIC            1.000000            0.776364
+Second Choice RMSE          0.776364            1.000000

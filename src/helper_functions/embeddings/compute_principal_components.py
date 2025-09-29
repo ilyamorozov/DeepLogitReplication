@@ -1,3 +1,4 @@
+
 import os
 
 import pandas as pd
@@ -9,7 +10,7 @@ def compute_principal_components(
     embeddings,
     principal_components_path,
     asins,
-    num_components=3,
+    num_components=10,
 ):
     """Compute principal components for multiple embedding matrices and combined embeddings.
 

@@ -40,7 +40,7 @@ getwd()
 
 # B.) Doing some cleaning of the data
 # Reading the data 
-survey_data <- fread("data/experiment/input/survey_responses/ebook_survey_data_edited.csv", na.strings = "")
+survey_data <- fread("data/experiment/survey_responses/ebook_survey_data_edited.csv", na.strings = "")
 survey_data <- survey_data[554:nrow(survey_data)] # removing the pilot data and the test data (this is from manual inspection)
 
 # Saving the filtered data
@@ -93,13 +93,13 @@ setcolorder(survey_data, "id_var")
 survey_data[, `:=`(selected_position_1 = selected_position_1 + 1,
                    selected_position_2 = selected_position_2 + 1)]
 
-dir.create("data/experiment/intermediate", showWarnings = FALSE)
+dir.create("temp/experiment", showWarnings = FALSE)
 
 # Create directory if it does not exist
-dir.create("data/experiment/intermediate/survey_responses", showWarnings = FALSE)
+dir.create("temp/experiment/survey_responses", showWarnings = FALSE)
 
 # Saving the cleaned data
-fwrite(survey_data, "data/experiment/intermediate/survey_responses/ebook_survey_data_cleaned.csv") # saving as a csv
+fwrite(survey_data, "temp/experiment/survey_responses/ebook_survey_data_cleaned.csv") # saving as a csv
 
 
 # Check unique date in the data
@@ -110,7 +110,7 @@ unique(survey_data1$date)
 # C.) Obtaining a product_id - ASIN - Title - genre - pages - year dictionary
 # Obtaining a product_id, title dictionary
 # Relevant variables: order_array_id_1, order_array_titles_1 (using the first observation of the cleaned dataset)
-survey_data <- fread("data/experiment/intermediate/survey_responses/ebook_survey_data_cleaned.csv") # saving as a csv
+survey_data <- fread("temp/experiment/survey_responses/ebook_survey_data_cleaned.csv") # saving as a csv
 
 product_ids <- unlist(str_split(survey_data$order_array_id_1[1], ";")) # obtaining the product ids
 product_titles <- unlist(str_split(survey_data$order_array_titles_1[1], ";")) # obtaining the product titles
@@ -160,7 +160,7 @@ getwd() # checking the directory
 
 # A.) First obtaining the needed dataset
 # Loading the needed data
-survey_data <- fread("data/experiment/intermediate/survey_responses/ebook_survey_data_cleaned.csv") # loading the cleaned survey data
+survey_data <- fread("temp/experiment/survey_responses/ebook_survey_data_cleaned.csv") # loading the cleaned survey data
 # dictionary <- fread("data/experiment/intermediate/survey_responses/ebook_product_dictionary.csv")# loading the product dictionary
 
 # Only keeping relevant variables and looking at the first and second choices of each survey
@@ -240,8 +240,8 @@ mult_logit_data <- dummy_cols(mult_logit_data, "product_id")
 mult_logit_data[, product_id_4 := NULL] # removing one product_id as the base category
 
 # create directory if it does not exist
-dir.create("data/experiment/intermediate/survey_responses", showWarnings = FALSE)
-fwrite(mult_logit_data, "data/experiment/intermediate/survey_responses/ebook_mult_logit_data.csv") # saving as a csv
+dir.create("temp/experiment/survey_responses", showWarnings = FALSE)
+fwrite(mult_logit_data, "temp/experiment/survey_responses/ebook_mult_logit_data.csv") # saving as a csv
 # Important variables to note in this dataset:
 # choice_id - an ID for a given choice situation or task
 # respondent_id - an ID for a given respondent in the ebook survey 

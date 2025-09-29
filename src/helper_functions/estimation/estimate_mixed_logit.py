@@ -6,18 +6,18 @@ import numpy as np
 import pandas as pd
 from xlogit import MixedLogit
 
+from src.helper_functions.file_structure.get_file_path_from_config import get_file_path_from_config
+
 
 def standardize(series):
     return (series - series.mean()) / series.std()
 
 
-def load_data_long(input_path, save_long_data=False):
+def load_data_long(input_path, book_principal_components_path, save_long_data=False):
     # Paths to the relevant data
-    choice_data_path = (
-        "data/experiment/intermediate/survey_responses/ebook_mult_logit_data.csv"
-    )
+    choice_data_path = get_file_path_from_config(path_type="ESTIMATE_MIXED_LOGIT", path="CHOICE_DATA_PATH")
     book_data_path = os.path.join(input_path, "books/books.csv")
-    book_principal_components_path = "data/experiment/intermediate/principal_components"
+    # book_principal_components_path = "data/experiment/intermediate/principal_components"
 
     # Load book data
     book_data = pd.read_csv(book_data_path)
@@ -59,8 +59,16 @@ def load_data_long(input_path, save_long_data=False):
     )
 
     # Add columns for each principal component
-    for key, pc_dict in principal_components.items():
-        choice_data[key] = choice_data["asin"].map(pc_dict)
+    # for key, pc_dict in principal_components.items():
+    #     choice_data[key] = choice_data["asin"].map(pc_dict)
+
+    pc_df = pd.DataFrame(principal_components)
+    choice_data = choice_data.merge(
+        pc_df,
+        left_on="asin",
+        right_index=True,
+        how="left"
+    )
 
     # Step 5: Map additional book attributes into choice_data
     book_data["publication_year_normalized"] = standardize(
@@ -181,6 +189,7 @@ def estimate_mixed_logit(
     seed=1,
     return_empty=False,
     halton=False,
+    limit_cores=False
 ):
     """
     Estimate mixed logit model with multiple random starting points in parallel.
@@ -192,6 +201,10 @@ def estimate_mixed_logit(
         randvars (dict): Random variables specification
         n_draws (int): Number of draws for simulation
         num_starting_points (int): Number of different random starting points to try
+        seed (int): Seed for random number generation
+        return_empty (bool): If True, return an empty model with -inf log-likelihood
+        halton (bool): Use Halton sequences for draws if True, otherwise use pseudo-random
+        limit_cores (bool): Limit the number of cores used for parallel processing (should be set to True if running on KLC)
 
     Returns:
         MixedLogit: Best fitted model
@@ -218,6 +231,8 @@ def estimate_mixed_logit(
     )
 
     n_cores = max(1, cpu_count() - 1)
+    if limit_cores and n_cores > 18:
+        n_cores = 18
 
     # Create pool of workers
     with Pool(n_cores) as pool:
@@ -330,8 +345,116 @@ def compute_second_choice_likelihood(
     # Sum the log metrics
     second_choice_ll = np.sum(log_metric)
 
-    return second_choice_ll
+    return second_choice_ll, mkt_shares
 
+def generate_predicted_diversion_matrix(first_choice_data, s_unconditional, model, varnames):
+    """
+    Generate predicted selection probabilities for second choices based on the model's
+    predicted market shares after removing the first choice from consideration.
+    Average across all individuals who made the same first choice to get the predicted diversion rates
+    Args:
+        first_choice_data (pd.DataFrame): DataFrame containing first choice information.
+        s_unconditional (np.ndarray): Array of choice probabilities for each individual.
+        model: model estimation results object
+        varnames: Names of variables used in model estimation
+    Returns:
+        predicted_diversion_matrix (np.ndarray): Predicted diversion matrix (J x J)
+    """
+    # Extract first and second choice indices
+    unique_products = first_choice_data["product_id"].unique()
+
+    J = len(unique_products)
+
+    # Prepare an empty count matrix: (J x J).
+    # predicted_diversion_matrix[j1, j2] = probability j2 is choice in limited choice set (i.e. with first choice removed)
+    # given that product j1 was chosen first.
+    predicted_diversion_matrix = np.zeros((J, J), dtype=float)
+    for j, product in enumerate(unique_products):
+
+        # remove product j from available choices
+        product_j_removed = first_choice_data.apply(
+            lambda row: 0 if row["product_id"] == product else 1,
+            axis=1,
+        )
+
+        #compute predicted new probabilities for all individuals after removal of product j
+        s_with_j_removed = predict_mixed_logit(
+            model, first_choice_data, varnames, avail=product_j_removed
+        )
+
+        # formula for computing s_j->k = average of (s_k^(j) - s_k) / s_j over all individuals
+        # where s_k^(j) is the predicted probability of product k when product j is removed from the choice set
+        # s_k is the predicted probability of product k in the full choice set
+        # s_j is the predicted probability of product j in the full choice set
+
+        diff = s_with_j_removed[:, :] - s_unconditional[:, :]
+        denom = s_unconditional[:, j]
+        probs = diff / denom[:, None]
+
+        # set probabilities for the first choice product to 0
+        probs[:, j] = 0
+        # average across all individuals who chose product j first
+        avg_probs = np.average(probs, axis=0)
+
+        predicted_diversion_matrix[j, :] = avg_probs
+
+    assert np.allclose(predicted_diversion_matrix.sum(axis=1), 1)
+
+    return predicted_diversion_matrix
+
+
+def compute_second_choice_rmse_mae(
+    first_choice_data,
+    s_unconditional,
+    model,
+    varnames,
+    empirical_diversion_matrix,
+    return_predicted_diversion_matrix=False,
+):
+    """
+    Computes the predicted diversion matrix by:
+      1) Using the model's estimated parameters (both fixed and random) to compute
+         predicted utilities for each individual-product pair.
+      2) Determining each individual's first and second choice.
+      3) Constructing the predicted diversion matrix from these second choices.
+      4) Computing the RMSE of the predicted diversion matrix vs. the empirical one.
+
+    Parameters
+    ----------
+    first_choice_data : pd.DataFrame
+    varnames : list of str
+    randvars : dict
+    empirical_diversion_matrix : np.ndarray
+    Returns
+    -------
+    rmse : Root Mean Squared Error between predicted and empirical diversion matrices
+    mae : Mean Absolute Error between predicted and empirical diversion matrices
+    predicted_diversion_matrix (optional) : The predicted diversion matrix if return_predicted_diversion_matrix is True
+    """
+    predicted_diversion_matrix = generate_predicted_diversion_matrix(
+        first_choice_data, s_unconditional, model, varnames
+    )
+
+    # assert that all the rows sum to 1
+    assert np.allclose(predicted_diversion_matrix.sum(axis=1), 1)
+    assert np.allclose(empirical_diversion_matrix.sum(axis=1), 1)
+
+    diff = empirical_diversion_matrix - predicted_diversion_matrix
+
+    #creates a matrix of diversion matrix shape with False along diagonal and True else where
+    mask = ~np.eye(diff.shape[0], dtype=bool)
+
+    # Compute RMSE, we exclude elements where mask[i,j] == False
+    rmse = np.sqrt(
+        np.mean(a=diff ** 2, where=mask)
+    )
+
+    mae = np.mean(np.abs(diff[mask]))
+
+    if return_predicted_diversion_matrix:
+        return rmse, mae, predicted_diversion_matrix
+
+    return rmse, mae
 
 def simulate_individual(
     first_choice_data,
@@ -395,93 +518,3 @@ def simulate_individual(
     utilities = np.array(utilities)
 
     return utilities
-
-
-def generate_predicated_diversion_matrix(coeff_dict, first_choice_data, seed=1):
-    np.random.seed(seed)
-    choice_ids = first_choice_data["choice_id"].unique()
-    unique_products = first_choice_data["product_id"].unique()
-    J = len(unique_products)
-
-    # Prepare an empty count matrix: (J x J).
-    # predicted_count_matrix[j1, j2] = number of times product j2 is chosen second
-    # given that product j1 was chosen first.
-    predicted_count_matrix = np.zeros((J, J), dtype=float)
-
-    # Loop through each choice situation
-    for i in choice_ids:
-        utilities = simulate_individual(first_choice_data, coeff_dict, i, seed=seed + i)
-        sorted_idx = np.argsort(utilities)[::-1]
-        first_choice_idx = sorted_idx[0]
-        second_choice_idx = sorted_idx[1]
-
-        # Map these back to actual product IDs
-        first_choice_product_id = unique_products[first_choice_idx]
-        second_choice_product_id = unique_products[second_choice_idx]
-
-        # Update predicted_count_matrix
-        row_index_for_first = np.where(unique_products == first_choice_product_id)[0][0]
-        col_index_for_second = np.where(unique_products == second_choice_product_id)[0][
-            0
-        ]
-        predicted_count_matrix[row_index_for_first, col_index_for_second] += 1
-
-    # Compute predicted diversion matrix
-    col_sums = predicted_count_matrix.sum(axis=1, keepdims=True)
-    with np.errstate(divide="ignore", invalid="ignore"):
-        predicted_diversion_matrix = np.where(
-            col_sums != 0, predicted_count_matrix / col_sums, 0
-        )
-
-    assert np.allclose(predicted_diversion_matrix.sum(axis=1), 1)
-
-    return predicted_diversion_matrix
-
-
-def compute_second_choice_rmse(
-    model,
-    first_choice_data,
-    empirical_diversion_matrix,
-    seed=123,
-    return_predicted_diversion_matrix=False,
-):
-    """
-    Computes the predicted diversion matrix by:
-      1) Using the model's estimated parameters (both fixed and random) to compute
-         predicted utilities for each individual-product pair.
-      2) Determining each individual's first and second choice.
-      3) Constructing the predicted diversion matrix from these second choices.
-      4) Computing the RMSE of the predicted diversion matrix vs. the empirical one.
-
-    Parameters
-    ----------
-    model : an object containing, at least:
-    first_choice_data : pd.DataFrame
-    varnames : list of str
-    randvars : dict
-    empirical_diversion_matrix : np.ndarray
-
-    Returns
-    -------
-    rmse : float
-    """
-    # Create a dictionary of parameter names -> parameter values
-    coeff_dict = dict(zip(model.coeff_names, model.coeff_))
-
-    predicted_diversion_matrix = generate_predicated_diversion_matrix(
-        coeff_dict, first_choice_data, seed=seed
-    )
-
-    # assert that all the rows sum to 1
-    assert np.allclose(predicted_diversion_matrix.sum(axis=1), 1)
-    assert np.allclose(empirical_diversion_matrix.sum(axis=1), 1)
-
-    # Compute RMSE
-    rmse = np.sqrt(
-        np.mean((empirical_diversion_matrix - predicted_diversion_matrix) ** 2)
-    )
-
-    if return_predicted_diversion_matrix:
-        return rmse, predicted_diversion_matrix
-
-    return rmse

@@ -2,10 +2,13 @@
 
 import os
 import time
+from typing import Literal
 
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.ticker import ScalarFormatter
+
+from src.helper_functions.file_structure.get_file_path_from_config import get_file_path_from_config
 
 ###############################################################################
 # 1) Define a user-friendly mapping for model names (from tab names, specs, etc.)
@@ -13,7 +16,7 @@ from matplotlib.ticker import ScalarFormatter
 formatted_submodel_map = {
     # Benchmarks:
     "plain_logit": "Plain Logit",
-    "observables": "Observables",
+    "observables": "Mixed Logit with Attributes",
     # Images:
     "xception_image": "Xception",
     "inceptionv3_image": "InceptionV3",
@@ -91,6 +94,7 @@ def classify_subheading(tab_name: str) -> str:
 ###############################################################################
 def read_excel_and_select_best_models(
     excel_path: str,
+    num_pcs: int = 6,
 ):
     """
     Reads the Excel file with multiple tabs. For each tab:
@@ -158,7 +162,7 @@ def read_excel_and_select_best_models(
 
     # For each sheet (tab), pick best row by AIC and best by RMSE
     for tab_name, df in all_sheets.items():
-        if "Specification" not in df.columns or tab_name == "observables":
+        if "Specification" not in df.columns:
             continue  # skip sheets without the required columns
         if tab_name == "vgg16_image":
             continue  # skip VGG16
@@ -171,6 +175,11 @@ def read_excel_and_select_best_models(
             "Second Choice LL",
             "Second Choice RMSE",
         ]
+        
+        #if model is not observables we should include the step
+        if tab_name != "observables":
+            required_cols += ["Step"]
+
         for col in required_cols:
             if col not in df.columns:
                 continue  # or raise an error
@@ -179,10 +188,13 @@ def read_excel_and_select_best_models(
         subheading = classify_subheading(tab_name)
 
         # best AIC row
-        aic_min_idx = df["First Choice AIC"].idxmin()
-        best_aic_row = df.loc[aic_min_idx]
+        # We use the augmented set selection algorithm to pick the best specification
+        #best_aic_row = select_augmented_set_best_spec(num_pcs=6, model_df=df)
+        best_aic_row = df[df['Best Specification'] == 1].iloc[0]
 
         # best RMSE row
+        # Unclear if we should use the augmented set selection algorithm here as well
+        # We will just pick the row with the minimum RMSE for now
         rmse_min_idx = df["Second Choice RMSE"].idxmin()
         best_rmse_row = df.loc[rmse_min_idx]
 
@@ -190,7 +202,7 @@ def read_excel_and_select_best_models(
         best_rmse_model_key = str(tab_name)
 
         best_aic_dict[subheading][best_aic_model_key] = {
-            "specification": best_rmse_row["Specification"],
+            "specification": best_aic_row["Specification"],
             "first_choice_ll": float(best_aic_row["First Choice LL"]),
             "first_choice_aic": float(best_aic_row["First Choice AIC"]),
             "second_choice_ll": float(best_aic_row["Second Choice LL"]),
@@ -200,6 +212,7 @@ def read_excel_and_select_best_models(
                 float(best_aic_row["Second Choice RMSE"]) - plain_logit_rmse
             )
             / plain_logit_rmse,
+            "second_choice_mae": float(best_aic_row["Second Choice MAE"]),
         }
 
         best_rmse_dict[subheading][best_rmse_model_key] = {
@@ -213,7 +226,15 @@ def read_excel_and_select_best_models(
                 float(best_rmse_row["Second Choice RMSE"]) - plain_logit_rmse
             )
             / plain_logit_rmse,
+            "second_choice_mae": float(best_rmse_row["Second Choice MAE"]),
         }
+
+        # if model name isn't observables we should include the step (observables tab doesn't have step)
+        if tab_name != "observables":
+            best_aic_dict[subheading][best_aic_model_key]["step"] = int(best_aic_row["Step"])
+            best_rmse_dict[subheading][best_rmse_model_key]["step"] = int(best_rmse_row["Step"])
+
+
     attribute_based_mixed_dict = {}
     attribute_based_mixed_dict["Benchmarks"] = {}
     attribute_based_mixed_dict["Attribute-Based Mixed Logit"] = {}
@@ -239,6 +260,7 @@ def read_excel_and_select_best_models(
                     float(row_plain_logit["Second Choice RMSE"]) - plain_logit_rmse
                 )
                 / plain_logit_rmse,
+                "second_choice_mae": float(row_plain_logit["Second Choice MAE"])
             }
             best_rmse_dict["Benchmarks"]["plain_logit"] = {
                 "specification": "plain logit",
@@ -252,6 +274,7 @@ def read_excel_and_select_best_models(
                     float(row_plain_logit["Second Choice RMSE"]) - plain_logit_rmse
                 )
                 / plain_logit_rmse,
+                "second_choice_mae": float(row_plain_logit["Second Choice MAE"])
             }
 
         for _, row in obs_df.iterrows():
@@ -267,6 +290,7 @@ def read_excel_and_select_best_models(
                         float(row["Second Choice RMSE"]) - plain_logit_rmse
                     )
                     / plain_logit_rmse,
+                    "second_choice_mae": float(row["Second Choice MAE"])
                 }
             else:
                 attribute_based_mixed_dict["Attribute-Based Mixed Logit"][
@@ -282,6 +306,7 @@ def read_excel_and_select_best_models(
                         float(row["Second Choice RMSE"]) - plain_logit_rmse
                     )
                     / plain_logit_rmse,
+                    "second_choice_mae": float(row["Second Choice MAE"])
                 }
 
     # add the best mixed logit model to the attribute_based_mixed_dict["Benchmarks"]
@@ -325,6 +350,124 @@ def read_excel_and_select_best_models(
         ][best_mixed_logit_model]
 
     return best_aic_dict, best_rmse_dict, attribute_based_mixed_dict
+
+###############################################################################
+# 4) Generate AIC and Error Scatter Plots
+###############################################################################
+def plot_aic_error_scatter(model_name: str,
+                          model_results_df: pd, 
+                          figures_dir: str, 
+                          plot_name: str, 
+                          max_num_rvs: int,
+                          error: Literal['AIC', 'RMSE'],
+                          selected_x: int,
+                          selected_y_aic: float,
+                          selected_y_error: float) -> None:
+    """
+    Plot number of RVs (K) on x-axis vs AIC and Error (RMSE or MAE) on y-axis.
+    Highlight the selected model with a gold star.
+    Save the plot to the specified directory.
+    error should be one of "RMSE" and "MAE
+    Arguments:
+    - model_name: str, name of the model (for title)
+    - model_results_df: pd.DataFrame, DataFrame with model results
+    - figures_dir: str, directory to save the figure
+    - plot_name: str, filename for the saved plot (e.g. "aic_rmse_scatter.png")
+    - max_num_rvs: int, maximum number of RVs considered (for x-axis range)
+    - error: str, either "RMSE" or "MAE" to indicate which error metric to plot
+    - selected_x: int, x-coordinate of the selected model (number of RVs)
+    - selected_y_aic: float, y-coordinate of the selected model (AIC value)
+    - selected_y_error: float, y-coordinate of the selected model (Error value)
+    Returns:
+    - None (saves the plot to file)
+    """
+    _, ax = plt.subplots(figsize=(8, 6), nrows=1, ncols=2)
+
+    ax_dict = {
+        "First Choice AIC": ax[0],
+        f"Second Choice {error}": ax[1],
+    }
+
+    # Handle plot title formatting
+    if "image" in model_name:
+        plot_title = formatted_submodel_map[model_name]
+    else:
+        if model_name.split("_")[0] == "user":
+            plot_title = formatted_submodel_map[model_name] + " - " + model_name.split("_")[0].capitalize() + " " + model_name.split("_")[1].capitalize()
+        else:
+            plot_title = formatted_submodel_map[model_name] + " - " + model_name.split("_")[0].capitalize()
+
+    plt.suptitle(f"{plot_title}", fontsize=14)
+
+    ax_dict["First Choice AIC"].set_title("First Choice AIC")
+    ax_dict["First Choice AIC"].set_xlabel("Number of RVs")
+    ax_dict["First Choice AIC"].set_ylabel("AIC")
+
+    ax_dict[f"Second Choice {error}"].set_title(f"Second Choice {error}")
+    ax_dict[f"Second Choice {error}"].set_xlabel("Number of RVs")
+    ax_dict[f"Second Choice {error}"].set_ylabel(f"{error}")
+
+    specs_by_num_rvs = {i: [] for i in range(max_num_rvs + 1)}
+
+    selected_models_df = pd.DataFrame(
+        columns=["Specification", "Num PCs", "First Choice AIC", f"Second Choice {error}", "Coefficient Names", "Estimated Coefficients"]
+    )
+
+    #Iterate through model results and categorize by number of PCs
+    #Given model with k PCs, should be saved in each bucket from k to max_num_pcs
+    #Also save results in a DataFrame for summary
+    for specification, aic_result, error_result, coeff_names, coeffs, step in zip(model_results_df["Specification"], 
+                                                   model_results_df["First Choice AIC"], 
+                                                   model_results_df[f"Second Choice {error}"],
+                                                   model_results_df["Coefficient Names"],
+                                                   model_results_df["Estimated Coefficients"],
+                                                   model_results_df["Step"]):
+        specs_by_num_rvs[int(step)].append((specification, aic_result, error_result, coeff_names, coeffs))
+
+    mins_subset_x = []
+    mins_subset_y_aic = []
+    mins_subset_y_rmse = []
+
+    #Iterate through each bucket of specifications by number of PCs
+    #Save the minimum AIC and RMSE by AIC for each bucket K<=n
+    #plot the values other than minimums in grey
+    for num_pcs, spec_results in specs_by_num_rvs.items():
+        for result in spec_results:
+            if result == min(spec_results, key=lambda x: x[1]):
+                specification, aic_result, error_result, coeff_names, coeffs = result
+                mins_subset_x.append(num_pcs)
+                mins_subset_y_aic.append(aic_result)
+                mins_subset_y_rmse.append(error_result)
+                selected_models_df.loc[len(selected_models_df)] = [
+                    specification, num_pcs, aic_result, error_result, coeff_names, coeffs
+                ]
+            else:
+                specification, aic_result, error_result, coeff_names, coeffs = result
+                ax_dict["First Choice AIC"].scatter(num_pcs, aic_result, color="grey", alpha=0.75, label=specification)
+                ax_dict[f"Second Choice {error}"].scatter(num_pcs, error_result, color="grey", alpha=0.75, label=specification)
+
+    xticks = ["K=0"] + [f"K={i}" for i in range(1, max_num_rvs + 1)]
+
+    ax_dict["First Choice AIC"].set_xticks(range(max_num_rvs + 1))
+    ax_dict[f"Second Choice {error}"].set_xticks(range(max_num_rvs + 1))
+
+    ax_dict["First Choice AIC"].set_xticklabels(xticks)
+    ax_dict[f"Second Choice {error}"].set_xticklabels(xticks)
+
+    #plot connected redline for minimums computed in above loop
+    ax_dict["First Choice AIC"].plot(mins_subset_x, mins_subset_y_aic, label='Connected Subset', color='red', marker='o')
+    ax_dict[f"Second Choice {error}"].plot(mins_subset_x, mins_subset_y_rmse, label='Connected Subset', color='red', marker='o')
+
+    ax_dict["First Choice AIC"].plot(
+        [selected_x], [selected_y_aic], color="gold", marker="*", markersize=12, label="Selected AIC"
+    )
+    ax_dict[f"Second Choice {error}"].plot(
+        [selected_x], [selected_y_error], color="gold", marker="*", markersize=12, label="Selected Error"
+    )
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(figures_dir, plot_name))
+    plt.close()
 
 
 ###############################################################################
@@ -394,6 +537,13 @@ def generate_figure(metric, models_dict, title, x_label, output_filename):
         # Insert each model for this subheading
         # gather the models in the order they were found in `plotting_data`
         sub_data = [d for d in plotting_data if d[0] == subh]
+        
+        # If the subheading is "Benchmarks" we need to swap first
+        # and second element so that plain logit is first 
+        # unless title is Attribute-Based then the order is already correct
+        if subh == "Benchmarks" and title != "Attribute-Based Mixed Logit Specifications":
+            sub_data[0], sub_data[1] = sub_data[1], sub_data[0]
+
         for sd in sub_data:
             # sd is (subheading, disp_name, x_value)
             final_labels.append(sd[1])  # disp_name
@@ -453,11 +603,10 @@ def generate_figure(metric, models_dict, title, x_label, output_filename):
     plt.xlabel(x_label, fontsize=12)
 
     # Fix x-axis range and ticks for RMSE
-    if metric == "second_choice_rmse":
+    if metric in ["second_choice_rmse", "second_choice_mae"]:
         ax.set_xlim(0.067, 0.090)
         ax.set_xticks(
             [
-                0.0675,
                 0.070,
                 0.0725,
                 0.075,
@@ -466,6 +615,8 @@ def generate_figure(metric, models_dict, title, x_label, output_filename):
                 0.0825,
                 0.085,
                 0.0875,
+                0.09,
+                0.0925
             ]
         )
 
@@ -525,6 +676,7 @@ def save_summary_as_xlsx(
                         "Percent Delta RMSE": metrics.get(
                             "percent_delta_rmse", float("nan")
                         ),
+                        "Second Choice MAE": metrics.get("second_choice_mae", float("nan")),
                     }
                 )
         return pd.DataFrame(rows)
@@ -548,23 +700,32 @@ def save_summary_as_xlsx(
 ###############################################################################
 # 5) Main function
 ###############################################################################
-def main():
+def main(num_pcs: int = 6):
     # Read data, build dictionaries
     # todays_date = time.strftime("%Y-%m-%d")
-    todays_date = "2025-03-21"
-    excel_path = f"data/experiment/output/estimation_results/mixed_logit_results_{todays_date}.xlsx"
+    results_date = "2025-09-15"
+    #excel_path = f"data/experiment/output/estimation_results/mixed_logit_results_{results_date}.xlsx"
+    results_dir = get_file_path_from_config(path_type="EXPERIMENT_4", path="RESULTS_DIR")
+    excel_path = os.path.join(results_dir, f"mixed_logit_results_{results_date}.xlsx")
 
     # extract date from the excel file name
     date = excel_path.split("_")[-1].split(".")[0]
 
     best_aic_dict, best_rmse_dict, attribute_based_mixed_dict = (
-        read_excel_and_select_best_models(excel_path)
+        read_excel_and_select_best_models(
+            excel_path=excel_path, 
+            num_pcs=num_pcs
+        )
     )
 
     # Save the dictionaries to a XLSX with three sheets
-    save_path = f"data/experiment/output/estimation_results/mixed_logit_summary_{todays_date}.xlsx"
+    
+
+    #save_path = f"data/experiment/output/estimation_results/mixed_logit_summary_{results_date}.xlsx"
+    summary_dir = get_file_path_from_config(path_type="EXPERIMENT_4", path="SUMMARY_DIR")
+    summary_path = os.path.join(summary_dir, f"mixed_logit_summary_{results_date}.xlsx")
     save_summary_as_xlsx(
-        best_aic_dict, best_rmse_dict, attribute_based_mixed_dict, save_path
+        best_aic_dict, best_rmse_dict, attribute_based_mixed_dict, summary_path
     )
 
     # Print all dictionaries, but only the RMSE entries
@@ -581,10 +742,42 @@ def main():
             print(f"  RMSE: {metrics['second_choice_rmse']}")
 
     # Create an output directory
-    out_dir = "data/experiment/output/figures"
-    os.makedirs(out_dir, exist_ok=True)
+    out_dir = get_file_path_from_config("EXPERIMENT_4", path="OUT_DIR")
+    os.makedirs(out_dir, exist_ok=True)    
 
-    # Define a list of (metric, selection, filename_suffix)
+    #AIC error scatters plots save paths
+    aic_rmse_scatters_dir = os.path.join(out_dir, "aic_rmse_scatters/")
+    aic_mae_scatters_dir = os.path.join(out_dir, "aic_mae_scatters/")
+
+    all_sheets = pd.read_excel(excel_path, sheet_name=None)
+    for model_name, df in all_sheets.items():
+        if model_name == "vgg16_image" or model_name == "observables":
+            continue
+
+        plot_aic_error_scatter(
+            model_name=model_name,
+            model_results_df=df,
+            figures_dir=aic_rmse_scatters_dir,
+            plot_name=f"pc_specifications_aic_rmse_scatter_{model_name}_{results_date}.png",
+            max_num_rvs=7,
+            error="RMSE",
+            selected_x=best_aic_dict[classify_subheading(model_name)][model_name]["step"],
+            selected_y_aic=float(best_aic_dict[classify_subheading(model_name)][model_name]["first_choice_aic"]),
+            selected_y_error=float(best_aic_dict[classify_subheading(model_name)][model_name]["second_choice_rmse"])
+        )
+
+        plot_aic_error_scatter(
+            model_name=model_name,
+            model_results_df=df,
+            figures_dir=aic_mae_scatters_dir,
+            plot_name=f"pc_specifications_aic_mae_scatter_{model_name}_{results_date}.png",
+            max_num_rvs=7,
+            error="MAE",
+            selected_x=best_aic_dict[classify_subheading(model_name)][model_name]["step"],
+            selected_y_aic=float(best_aic_dict[classify_subheading(model_name)][model_name]["first_choice_aic"]),
+            selected_y_error=float(best_aic_dict[classify_subheading(model_name)][model_name]["second_choice_mae"])    
+        )
+
     figure_requests = [
         ("first_choice_ll", "best_aic", "first_choice_ll_best_aic.png"),
         ("first_choice_aic", "best_aic", "first_choice_aic_best_aic.png"),
@@ -598,7 +791,10 @@ def main():
         ("first_choice_aic", "attribute", "first_choice_aic_attribute.png"),
         ("second_choice_rmse", "attribute", "second_choice_rmse_attribute.png"),
         ("second_choice_ll", "attribute", "second_choice_ll_attribute.png"),
+        ("second_choice_mae", "best_aic", "second_choice_mae_best_aic.png")
     ]
+
+    selected_model_scatters_dir = os.path.join(out_dir, "selected_model_scatters/")
 
     for metric, selection, filename in figure_requests:
         if selection == "best_aic":
@@ -608,9 +804,9 @@ def main():
         else:
             dict_to_plot = attribute_based_mixed_dict
 
-        filename = filename.split(".")[0] + "_" + date + ".png"
+        filename = filename.split(".")[0] + ".png"
 
-        output_path = os.path.join(out_dir, filename)
+        output_path = os.path.join(selected_model_scatters_dir, filename)
         if metric == "first_choice_ll":
             fig_title = "Mixed Logit with Principal Components"
             x_label = "First Choice Log-Likelihood (LL)"
@@ -620,6 +816,9 @@ def main():
         elif metric == "second_choice_rmse":
             fig_title = "Mixed Logit with Principal Components"
             x_label = "Counterfactual RMSE (Second Choices)"
+        elif metric == "second_choice_mae":
+            fig_title = "Mixed Logit with Principal Components"
+            x_label = "Counterfactual MAE (Second Choices)"
         else:
             fig_title = "Mixed Logit with Principal Components"
             x_label = "Counterfactual Log-Likelihood (Second Choices)"
@@ -630,4 +829,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(num_pcs=6)

@@ -9,6 +9,7 @@ from src.helper_functions.embeddings.compute_principal_components import (
 )
 from src.helper_functions.embeddings.load_embeddings import load_all_embeddings
 
+from src.helper_functions.file_structure.get_file_path_from_config import get_file_path_from_config
 
 def load_book_data(book_data_path):
     """Load observable book attributes"""
@@ -18,13 +19,15 @@ def load_book_data(book_data_path):
 def main():
 
     # Set directory paths
-    intermediate_path = "data/experiment/intermediate/"
+    #intermediate_path = "data/experiment/intermediate/"
+    intermediate_path = get_file_path_from_config(path_type="EXPERIMENT_2", path="INTERMEDIATE_PATH")
     embeddings_path = os.path.join(intermediate_path, "embeddings/")
 
     # Input directories
     image_embeddings_path = os.path.join(embeddings_path, "images/")
     text_embeddings_path = os.path.join(embeddings_path, "texts/")
-    book_data_path = "data/experiment/input/books/books.csv"
+    # book_data_path = "data/experiment/books/books.csv"
+    book_data_path = get_file_path_from_config(path_type="EXPERIMENT_2", path="BOOK_DATA_PATH")
 
     # Output directories
     principal_components_path = os.path.join(intermediate_path, "principal_components/")

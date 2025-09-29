@@ -2,7 +2,6 @@ import numpy as np
 
 from src.helper_functions.estimation.estimate_mixed_logit import simulate_individual
 
-
 def parse_coefficients_as_dict(coeff_names_str, coeff_values_str):
     """
     Given two strings that look like:

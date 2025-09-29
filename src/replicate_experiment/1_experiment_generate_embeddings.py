@@ -12,6 +12,7 @@ from src.helper_functions.embeddings.generate_embeddings import (
     generate_text_embeddings,
 )
 
+from src.helper_functions.file_structure.get_file_path_from_config import get_file_path_from_config
 
 def load_book_texts_and_images(dir_path):
     """Loads book texts and images from the given file path.
@@ -96,8 +97,8 @@ def main():
     """Generates image and text embeddings for each model and saves them to disk."""
 
     # Set file paths
-    input_dir_path = "data/experiment/input/books/"
-    intermediate_dir_path = "data/experiment/intermediate/embeddings/"
+    input_dir_path = get_file_path_from_config(path_type="EXPERIMENT_1", path="INPUT_DIR_PATH")
+    intermediate_dir_path = get_file_path_from_config(path_type="EXPERIMENT_1", path="INTERMEDIATE_DIR_PATH")
     image_dir_path = os.path.join(intermediate_dir_path, "images/")
     text_dir_path = os.path.join(intermediate_dir_path, "texts/")
 
