@@ -1,0 +1,42 @@
+Category_Code,combined,descriptions,images,logit,reviews,titles,category1,category2,category3,category4,num_transactions,mean_price,sum_check
+10060201,0.002,0.538,0.019,0.0,0.421,0.02,"Clothing, Shoes & Jewelry",Men,Clothing,Active,1078.0,13.96172046661377,1.0
+10060207,0.025,0.016,0.043,0.0,0.799,0.116,"Clothing, Shoes & Jewelry",Men,Clothing,Shirts,913.0,13.251250267028809,0.999
+10060215,0.014,0.042,0.189,0.0,0.7,0.054,"Clothing, Shoes & Jewelry",Men,Clothing,Underwear,732.0,16.73166275024414,0.9989999999999999
+10110210,0.002,0.199,0.096,0.0,0.411,0.291,"Clothing, Shoes & Jewelry",Women,Clothing,"Lingerie, Sleep & Lounge",552.0,15.022048950195312,0.9990000000000001
+10110218,0.003,0.861,0.064,0.0,0.035,0.037,"Clothing, Shoes & Jewelry",Women,Clothing,"Tops, Tees & Blouses",333.0,20.28270149230957,1.0
+13010204,0.017,0.59,0.048,0.0,0.019,0.326,Electronics,Accessories & Supplies,Audio & Video Accessories,Cables & Interconnects,644.0,9.981947898864746,1.0
+13060104,0.006,0.241,0.097,0.0,0.465,0.191,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Cables & Accessories,726.0,14.097244262695312,1.0
+13060112,0.047,0.371,0.31,0.0,0.122,0.15,Electronics,Computers & Accessories,Computer Accessories & Peripherals,"Keyboards, Mice & Accessories",656.0,20.646076202392578,1.0
+13060114,0.0,0.088,0.911,0.0,0.0,0.001,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Memory Cards,280.0,12.26,1.0
+13060404,0.0,0.0,1.0,0.0,0.0,0.0,Electronics,Computers & Accessories,Computers & Tablets,Tablets,593.0,149.31,1.0
+13060701,0.003,0.04,0.004,0.0,0.926,0.027,Electronics,Computers & Accessories,Monitors,Monitors,278.0,127.0,1.0
+13110101,0.014,0.462,0.499,0.0,0.0,0.025,Electronics,Headphones,Earbud Headphones,Earbud Headphones,1598.0,81.51,1.0
+13181001,0.0,0.036,0.0,0.0,0.964,0.0,Electronics,Television & Video,Streaming Media Players,Streaming Media Players,2470.0,55.1854362487793,1.0
+14020210,0.032,0.23,0.45,0.0,0.079,0.209,Grocery & Gourmet Food,Beverages,"Bottled Beverages, Water & Drink Mixes",Water,507.0,10.54195785522461,1.0
+14020605,0.093,0.092,0.429,0.001,0.175,0.21,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Coffee,1000.0,31.875690460205078,0.9999999999999999
+14020608,0.015,0.125,0.177,0.0,0.119,0.565,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Tea,427.0,15.68187427520752,1.001
+14180404,0.077,0.091,0.278,0.001,0.373,0.179,Grocery & Gourmet Food,Snack Foods,Chips & Crisps,Potato,448.0,13.418075561523438,0.999
+16030103,0.057,0.454,0.06,0.0,0.069,0.359,Health & Household,Health Care,Alternative Medicine,Aromatherapy,794.0,13.388595581054688,0.999
+16040408,0.01,0.232,0.303,0.0,0.308,0.146,Health & Household,Household Supplies,Household Batteries,AAA,1610.0,10.795845985412598,0.9989999999999999
+16041006,0.005,0.054,0.018,0.0,0.867,0.056,Health & Household,Household Supplies,Paper & Plastic,Paper & Plastic,923.0,21.764205932617188,1.0
+16041007,0.008,0.005,0.007,0.0,0.018,0.962,Health & Household,Household Supplies,Paper & Plastic,Paper Towels,728.0,21.6958065032959,1.0
+17021806,0.008,0.451,0.203,0.0,0.14,0.197,Home & Kitchen,Bedding,Sheets & Pillowcases,Sheet & Pillowcase Sets,864.0,30.230554580688477,0.999
+17050304,0.157,0.182,0.145,0.001,0.376,0.138,Home & Kitchen,Furniture,Bedroom Furniture,"Beds, Frames & Bases",360.0,146.30960083007812,0.999
+17050306,0.035,0.357,0.157,0.0,0.179,0.271,Home & Kitchen,Furniture,Bedroom Furniture,Mattresses & Box Springs,376.0,202.8076629638672,0.999
+17111205,0.181,0.34,0.407,0.0,0.039,0.032,Home & Kitchen,Kitchen & Dining,Storage & Organization,Food Storage,382.0,24.747821807861328,0.9989999999999999
+21010906,0.003,0.158,0.166,0.0,0.0,0.672,Office Products,Office & School Supplies,Filing Products,Folders,538.0,12.40532398223877,0.9990000000000001
+21011403,0.034,0.001,0.678,0.0,0.183,0.104,Office Products,Office & School Supplies,Paper,Copy & Printing Paper,876.0,35.35289764404297,1.0
+21012004,0.006,0.635,0.267,0.0,0.033,0.06,Office Products,Office & School Supplies,Writing & Correction Supplies,Markers & Highlighters,547.0,8.665539741516113,1.001
+21012008,0.045,0.091,0.208,0.001,0.091,0.565,Office Products,Office & School Supplies,Writing & Correction Supplies,Pens & Refills,518.0,24.91851234436035,1.001
+21021101,0.171,0.368,0.212,0.0,0.007,0.242,Office Products,Office Electronics,Printers & Accessories,Printer Parts & Accessories,741.0,59.9017448425293,1.0
+23021004,0.131,0.117,0.288,0.001,0.338,0.126,Pet Supplies,Cats,Food,Wet,414.0,13.86228084564209,1.001
+23021309,0.044,0.257,0.058,0.0,0.058,0.582,Pet Supplies,Cats,Litter & Housebreaking,Litter,347.0,21.821752548217773,0.9990000000000001
+23021802,0.006,0.056,0.695,0.0,0.17,0.074,Pet Supplies,Cats,Treats,Snacks,468.0,11.89913272857666,1.001
+23031107,0.022,0.06,0.261,0.0,0.026,0.631,Pet Supplies,Dogs,Food,Wet,350.0,17.949806213378906,1.0
+23031904,0.007,0.204,0.082,0.0,0.531,0.175,Pet Supplies,Dogs,Treats,"Cookies, Biscuits & Snacks",482.0,15.223137855529785,0.999
+27040201,0.131,0.098,0.359,0.001,0.132,0.279,Video Games,Nintendo Switch,Consoles,Consoles,312.0,199.80755615234375,1.0
+27040301,0.001,0.0,0.991,0.0,0.007,0.001,Video Games,Nintendo Switch,Games,Games,527.0,50.81248092651367,1.0
+27060103,0.085,0.085,0.506,0.0,0.045,0.279,Video Games,PC,Accessories,Gaming Keyboards,286.0,65.49876403808594,1.0
+27070401,0.0,0.059,0.02,0.0,0.0,0.921,Video Games,PlayStation 4,Games,Games,447.0,53.215213775634766,1.0
+27100401,0.0,0.0,0.809,0.0,0.188,0.003,Video Games,Xbox One,Games,Games,378.0,44.45339584350586,1.0
+Average,0.28785,0.2319,0.20714999999999995,0.235325,0.037425,0.00015000000000000001,0.9998000000000001,,,,,,
