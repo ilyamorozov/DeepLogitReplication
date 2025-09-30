@@ -212,7 +212,7 @@ def generate_mixed_logit_table(xlsx_path, output_tex_validation, output_tex_sele
     # 12. Build the LaTeX lines for Selected Models AIC Summary
     lines = []
     lines.append(r"\begin{centering}")
-    lines.append(r"\begin{tabular}{>{\raggedright}p{7.5cm}>{\raggedright}p{3cm}>{\centering}p{2cm}>{\centering}p{2cm}}")
+    lines.append(r"\begin{tabular}{>{\raggedright}p{7.5cm}>{\raggedright}p{3.5cm}>{\centering}p{1.5cm}>{\centering}p{1.5cm}}")
     lines.append(r"\hline")
     lines.append(r"{\footnotesize\textbf{Model}} & {\footnotesize\textbf{Random Coefficients}} & {\footnotesize\textbf{$AIC$}} & {\footnotesize\textbf{$\Delta AIC$}}\tabularnewline")
     lines.append(r"\hline")

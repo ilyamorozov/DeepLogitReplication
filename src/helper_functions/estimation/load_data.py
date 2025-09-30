@@ -5,8 +5,9 @@ import pandas as pd
 from src.helper_functions.estimation.estimate_mixed_logit import standardize
 
 
-def load_comscore_categories():
-    categories = pd.read_csv("data/comscore/input/comscore_categories.csv", dtype=str)[
+def load_comscore_categories(input_path):
+
+    categories = pd.read_csv(os.path.join(input_path, "comscore_categories.csv"), dtype=str)[
         "Category_Code"
     ].tolist()
     print(f"Categories needed: {categories}")
@@ -30,6 +31,9 @@ def load_data_long_comscore(input_path, save_long_data=False):
     principal_components = {}
     for file in os.listdir(principal_components_path):
         if file.endswith("_principal_components.csv"):
+            # just filter the combined model
+            if "combined" in file:
+                continue
             model = file.split("_principal_components")[0]
             filepath = os.path.join(principal_components_path, file)
 
@@ -125,3 +129,4 @@ def load_data_long_comscore(input_path, save_long_data=False):
         print(f"Long data saved to: {output_path}")
 
     return choice_data
+

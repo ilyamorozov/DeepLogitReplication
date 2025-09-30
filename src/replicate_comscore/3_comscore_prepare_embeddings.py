@@ -8,6 +8,7 @@ from src.helper_functions.embeddings.compute_principal_components import (
     compute_principal_components,
 )
 from src.helper_functions.embeddings.load_embeddings import load_all_embeddings
+from src.helper_functions.file_structure.get_file_path_from_config import get_file_path_from_config
 
 
 def load_category_to_asins(dir_path):
@@ -37,12 +38,13 @@ def load_category_to_asins(dir_path):
 
 
 def main():
-
-    category_to_asins = load_category_to_asins("data/comscore/input/selected_products")
+    input_path = get_file_path_from_config(path_type="COMSCORE_3", path="INPUT_PATH")
+    intermediate_path = get_file_path_from_config(path_type="COMSCORE_3", path="INTERMEDIATE_PATH")
+    category_to_asins = load_category_to_asins(os.path.join(input_path, "selected_products"))
     print(f"Categories: {category_to_asins.keys()}")
     print(f"Number of categories: {len(category_to_asins)}")
     categories_needed = pd.read_csv(
-        "data/comscore/input/comscore_categories.csv", dtype=str
+        os.path.join(input_path, "comscore_categories.csv"), dtype=str
     )["Category_Code"].tolist()
     print(f"Categories needed: {categories_needed}")
     print(f"Number of categories needed: {len(categories_needed)}")
@@ -50,8 +52,8 @@ def main():
     for category in categories_needed:
         asins = category_to_asins[category]
         # Set directory paths
-        intermediate_path = f"data/comscore/intermediate/{category}/"
-        embeddings_path = os.path.join(intermediate_path, "embeddings/")
+        category_path = os.path.join(intermediate_path, category)
+        embeddings_path = os.path.join(category_path, "embeddings/")
 
         # Input directories
         image_embeddings_path = os.path.join(embeddings_path, "images/")
@@ -59,7 +61,7 @@ def main():
 
         # Output directories
         principal_components_path = os.path.join(
-            intermediate_path, "principal_components/"
+            category_path, "principal_components/"
         )
 
         # Load image and text embeddings and compute principal components

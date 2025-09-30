@@ -1,0 +1,41 @@
+Category_Code,Category_Label_Short,category1,category2,category3,category4
+10060201,Clothing Active,"Clothing, Shoes & Jewelry",Men,Clothing,Active
+10060207,Clothing Shirts,"Clothing, Shoes & Jewelry",Men,Clothing,Shirts
+10060215,Clothing Underwear,"Clothing, Shoes & Jewelry",Men,Clothing,Underwear
+10110210,Clothing Sleep,"Clothing, Shoes & Jewelry",Women,Clothing,"Lingerie, Sleep & Lounge"
+10110218,Clothing Tops & Blouses,"Clothing, Shoes & Jewelry",Women,Clothing,"Tops, Tees & Blouses"
+13010204,Electronics Cables,Electronics,Accessories & Supplies,Audio & Video Accessories,Cables & Interconnects
+13060104,Electronics Accessories,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Cables & Accessories
+13060112,Electronics Keyboards,Electronics,Computers & Accessories,Computer Accessories & Peripherals,"Keyboards, Mice & Accessories"
+13060114,Electronics Memory Cards,Electronics,Computers & Accessories,Computer Accessories & Peripherals,Memory Cards
+13060404,Electronics Tablets,Electronics,Computers & Accessories,Computers & Tablets,Tablets
+13060701,Electronics Monitors,Electronics,Computers & Accessories,Monitors,Monitors
+13110101,Electronics Headphones,Electronics,Headphones,Earbud Headphones,Earbud Headphones
+13181001,Electronics Media Players,Electronics,Television & Video,Streaming Media Players,Streaming Media Players
+14020210,Groceries Water,Grocery & Gourmet Food,Beverages,"Bottled Beverages, Water & Drink Mixes",Water
+14020605,Groceries Coffee,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Coffee
+14020608,Groceries Tea,Grocery & Gourmet Food,Beverages,"Coffee, Tea & Cocoa",Tea
+14180404,Groceries Chips,Grocery & Gourmet Food,Snack Foods,Chips & Crisps,Potato
+16030103,Household Aromatherapy,Health & Household,Health Care,Alternative Medicine,Aromatherapy
+16040408,Household Batteries,Health & Household,Household Supplies,Household Batteries,AAA
+16041006,Household Trash Bags,Health & Household,Household Supplies,Paper & Plastic,Paper & Plastic
+16041007,Household Paper Towels,Health & Household,Household Supplies,Paper & Plastic,Paper Towels
+17021806,Home Sheets & Pillowcases,Home & Kitchen,Bedding,Sheets & Pillowcases,Sheet & Pillowcase Sets
+17050304,Bedroom Beds,Home & Kitchen,Furniture,Bedroom Furniture,"Beds, Frames & Bases"
+17050306,Bedroom Mattresses,Home & Kitchen,Furniture,Bedroom Furniture,Mattresses & Box Springs
+17111205,Kitchen Food Storage,Home & Kitchen,Kitchen & Dining,Storage & Organization,Food Storage
+21010906,Office Folders,Office Products,Office & School Supplies,Filing Products,Folders
+21011403,Office Paper,Office Products,Office & School Supplies,Paper,Copy & Printing Paper
+21012004,Office Markers,Office Products,Office & School Supplies,Writing & Correction Supplies,Markers & Highlighters
+21012008,Office Pens,Office Products,Office & School Supplies,Writing & Correction Supplies,Pens & Refills
+21021101,Office Printer Supplies,Office Products,Office Electronics,Printers & Accessories,Printer Parts & Accessories
+23021004,Pet Cat Food,Pet Supplies,Cats,Food,Wet
+23021309,Pet Cat Litter,Pet Supplies,Cats,Litter & Housebreaking,Litter
+23021802,Pet Cat Snacks,Pet Supplies,Cats,Treats,Snacks
+23031107,Pet Dog Food,Pet Supplies,Dogs,Food,Wet
+23031904,Pet Dog Treats,Pet Supplies,Dogs,Treats,"Cookies, Biscuits & Snacks"
+27040301,Video Games Nintendo,Video Games,Nintendo Switch,Games,Games
+27060103,Video Games PC,Video Games,PC,Accessories,Gaming Keyboards
+27070401,Video Games PS4,Video Games,PlayStation 4,Games,Games
+27100401,Video Games Xbox,Video Games,Xbox One,Games,Games
+27040201,Game Consoles Nintendo,Video Games,Nintendo Switch,Consoles,Consoles

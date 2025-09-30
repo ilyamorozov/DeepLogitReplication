@@ -11,6 +11,7 @@ from src.helper_functions.embeddings.generate_embeddings import (
     generate_image_embeddings,
     generate_text_embeddings,
 )
+from src.helper_functions.file_structure.get_file_path_from_config import get_file_path_from_config
 
 
 def load_product_images(dir_path, asins):
@@ -271,17 +272,17 @@ def load_category_to_asins(dir_path):
 
 def main():
     """Generates image and text embeddings for each model and saves them to disk."""
-
-    category_to_asins = load_category_to_asins("data/comscore/input/selected_products/")
-    categories_needed = pd.read_csv(
-        "data/comscore/input/comscore_categories.csv", dtype=str
+    input_path = get_file_path_from_config(path_type="COMSCORE_2", path="INPUT_PATH")
+    intermediate_path = get_file_path_from_config(path_type="COMSCORE_2", path="INTERMEDIATE_PATH")
+    category_to_asins = load_category_to_asins(os.path.join(input_path, "selected_products"))
+    categories_needed = pd.read_csv(os.path.join(input_path, "comscore_categories.csv"), dtype=str
     )["Category_Code"].tolist()
 
     for category in categories_needed:
         asins = category_to_asins[category]
         # Set file paths
-        input_dir_path = f"data/comscore/input/text_and_images/{category}/"
-        intermediate_dir_path = f"data/comscore/intermediate/{category}/embeddings/"
+        input_dir_path = os.path.join(input_path, "text_and_images", category)
+        intermediate_dir_path = os.path.join(intermediate_path, category, "embeddings/")
         image_dir_path = os.path.join(intermediate_dir_path, "images/")
         text_dir_path = os.path.join(intermediate_dir_path, "texts/")
 

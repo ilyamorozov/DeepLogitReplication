@@ -828,5 +828,115 @@ def main(num_pcs: int = 6):
         generate_figure(metric, dict_to_plot, fig_title, x_label, output_path)
 
 
+# Figure 4 
+
+def plot_principal_components(pc_path, output_path, book_info_path):
+
+    def break_title(title: str) -> str:
+        """
+        Break `title` into two lines:
+        - If it contains " & ", split there (keeping the ampersand on line 1).
+        - Otherwise split at the last space before the midpoint.
+        """
+        if ' & ' in title:
+            left, right = title.split(' & ', 1)
+            return f"{left} &\n{right}"
+
+        # fallback: split roughly in half
+        mid = len(title) // 2
+        split_pos = title.rfind(' ', 0, mid)
+        if split_pos == -1:
+            split_pos = title.find(' ')
+            if split_pos == -1:
+                return title  # no space at all
+        # include the space in the first line 
+        return f"{title[:split_pos+1]}\n{title[split_pos+1:]}"
+
+    # Load book data
+    pc_data = pd.read_csv(pc_path)
+    book_info = pd.read_csv(book_info_path)
+
+    # Simplify genres 
+    genre_map = {
+        "Mystery, Thriller & Suspense": "Mystery",
+        "Science Fiction & Fantasy": "Fantasy",
+        "Self-Help": "Self-Help"
+    }
+    book_info['genre'] = book_info['genre'].map(lambda g: genre_map.get(g, g))
+
+    # Ensure there's a title column for labeling
+    if 'title' not in book_info.columns:
+        book_info['title'] = book_info['asin']
+
+    # Merge PC data with book info
+    df = pd.merge(
+        pc_data,
+        book_info[['asin', 'genre', 'title']],
+        on='asin',
+        how='left'
+    )
+
+    # Rename PC columns for clarity
+    df.rename(columns={'0': 'PC1', '1': 'PC2', '2': 'PC3'}, inplace=True)
+
+    # Shape and color markers 
+    marker_map = {
+        "Fantasy": "o",  # filled circles
+        "Mystery": "^",    # triangles
+        "Self-Help": "s"      # squares
+    }
+
+    plt.figure(figsize=(10, 7))
+    for genre in marker_map.keys():
+        subset = df[df['genre'] == genre]
+        plt.scatter(subset['PC1'], subset['PC2'], label=genre, marker=marker_map[genre])
+        for _, row in subset.iterrows():
+            label = break_title(row['title'])
+            plt.annotate(
+                label,
+                (row['PC1'], row['PC2']),
+                xytext=(0, 5),            
+                textcoords="offset points",
+                ha='center',              
+                va='bottom',
+                fontsize=8
+            )
+
+    plt.xlabel("PC1", fontsize=14)
+    plt.ylabel("PC2", fontsize=14)
+    plt.title("PC1 vs PC2 (Review USE Text)", fontsize=16, pad=10)
+    plt.tick_params(axis='both', which='major', labelsize=12)
+
+    plt.legend(
+        title="Genre",
+        loc='upper center',              
+        bbox_to_anchor=(0.5, -0.15),      
+        ncol=len(df['genre'].unique()),   
+        frameon=False,
+        fontsize=12,          
+        title_fontsize=13                     
+    )
+
+    plt.legend(
+        title="Genre",
+        loc='upper center',              
+        bbox_to_anchor=(0.5, -0.15),      
+        ncol=len(df['genre'].unique()),   
+        frameon=False,
+        fontsize=12,           
+        title_fontsize=13      
+    )
+
+    plt.xlim(-25, 17)
+    plt.ylim(-20, 15)
+    plt.subplots_adjust(bottom=0.25) 
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+
+
 if __name__ == "__main__":
     main(num_pcs=6)
+
+    pc_path = get_file_path_from_config(path_type="EXPERIMENT_4", path="PC_DIR")
+    output_path = get_file_path_from_config(path_type="EXPERIMENT_4", path="OUTPUT_PC_FIGURE")
+    book_info_path = get_file_path_from_config(path_type="EXPERIMENT_4", path="BOOKS_CSV_PATH")
+    plot_principal_components(pc_path, output_path, book_info_path)

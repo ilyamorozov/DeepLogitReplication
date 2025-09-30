@@ -7,6 +7,10 @@ levelsof cat_code4, local(cat_values)
 
 foreach category in `cat_values' {
 
+// 	local category = "13110101"
+// 	local input_dir = "../../data/comscore/input"
+// 	local output_dir = "../../data/comscore/intermediate"
+
 	*** Import list of ASINS for estimation ***
 	import delimited "`input_dir'/selected_products/`category'/asin_list.csv", varnames(1) clear stringcols(2)
 	rename asin asin_code

@@ -11,6 +11,7 @@ from scipy import stats
 warnings.filterwarnings("ignore")
 from src.helper_functions.estimation.estimate_mixed_logit import estimate_mixed_logit
 from src.helper_functions.estimation.load_data import load_data_long_comscore
+from src.helper_functions.file_structure.get_file_path_from_config import get_file_path_from_config
 
 
 def save_results_to_xlsx(results, output_path):
@@ -116,10 +117,12 @@ def save_model_to_results(
 
 def main():
 
-    input_path = "data/comscore/intermediate"
+    input_path = get_file_path_from_config(path_type="COMSCORE_4", path="INPUT_PATH")
+    intermediate_path = get_file_path_from_config(path_type="COMSCORE_4", path="INTERMEDIATE_PATH")
+    estimate_results_path = get_file_path_from_config(path_type="COMSCORE_4", path="RESULT_PATH")
 
     categories_needed = pd.read_csv(
-        "data/comscore/input/comscore_categories.csv", dtype=str
+        os.path.join(input_path, "comscore_categories.csv"), dtype=str
     )["Category_Code"].tolist()
     print(f"Categories needed: {categories_needed}")
     print(f"Number of categories needed: {len(categories_needed)}")
@@ -134,7 +137,7 @@ def main():
             print(
                 f"Estimating for category: {category}, {i+1}/{len(categories_needed)}"
             )
-            category_path = os.path.join(input_path, category)
+            category_path = os.path.join(intermediate_path, category)
             first_choice_data = load_data_long_comscore(category_path)
             product_fixed_effects_varnames_minus_1 = sorted(
                 [
@@ -270,11 +273,11 @@ def main():
                         specification,
                     )
 
-            output_dir = "data/comscore/output/estimation_results"
+    
             todays_date = time.strftime("%Y-%m-%d")
-            os.makedirs(output_dir, exist_ok=True)
+            os.makedirs(estimate_results_path, exist_ok=True)
             output_path = os.path.join(
-                output_dir, f"mixed_logit_results_{category}_{todays_date}.xlsx"
+                estimate_results_path, f"mixed_logit_results_{category}_{todays_date}.xlsx"
             )
 
             save_results_to_xlsx(results, output_path)
