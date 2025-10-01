@@ -182,3 +182,7 @@ data/comscore-for-R-temp/
 /data/comscore/input/prices
 /data/comscore/input/purchases
 /data/comscore/input/selected_categories
+
+# pyenv version
+
+.python-version
