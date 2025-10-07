@@ -15,8 +15,9 @@ from src.helper_functions.file_structure.get_file_path_from_config import get_fi
 def find_files(pattern, root):
     return [str(path) for path in Path(root).rglob(pattern)]
 
-
-output_path = get_file_path_from_config(path_type="COMSCORE_7", path="OUTPUT_PATH")
+input_path = get_file_path_from_config(path_type="COMSCORE_6", path="INPUT_PATH")
+intermediate_path = get_file_path_from_config(path_type="COMSCORE_6", path="INTERMEDIATE_PATH")
+output_path = get_file_path_from_config(path_type="COMSCORE_6", path="OUTPUT_PATH")
 figure_path = os.path.join(output_path, "figures")
 table_path = os.path.join(output_path, "tables")
 summary_path = os.path.join(output_path, "estimation_summaries")
@@ -24,6 +25,9 @@ summary_path = os.path.join(output_path, "estimation_summaries")
 os.makedirs(figure_path, exist_ok=True)
 os.makedirs(table_path, exist_ok=True)
 os.makedirs(summary_path, exist_ok=True)
+
+
+
 
 
 # ------ SCRIPT 1 ------
@@ -279,9 +283,9 @@ percentiles.columns = ["25%", "50%", "75%"]
 summary_stats = pd.concat([summary_stats, percentiles], axis=1)
 print(summary_stats)
 
-
 # ------ SCRIPT 2 ------
-# AIC histogram for all categories
+# Figure A5
+# Histogram of differences between the best unstructured data model and plain logit for each category
 
 # Define file paths
 file_name = "final_table_2025-08-21.csv"
@@ -416,7 +420,8 @@ kde_path = f"{figure_path}/aic_histogram.png"
 plt.savefig(kde_path, dpi=300)
 
 # ------ SCRIPT 3 ------
-# LaTeX table all categories
+# Table A3
+# LaTeX table of AIC improvement and increase in predicted diversion to closest substitute for all categories
 
 # Merge with category labels to add Category_Label_Short
 table_category_level = table_category_level.merge(
@@ -468,7 +473,7 @@ latex_table = df_selected.to_latex(
 ).strip()
 
 # Add a \footnotesize line in the very beginning
-footnotesize_line = r"\{footnotesize}"
+footnotesize_line = r"{\footnotesize"
 latex_table = latex_table.replace(r"\begin{tabular}", footnotesize_line + "\n\\begin{tabular}")
 
 # Append a horizontal line + Averaged row just before \end{tabular}
@@ -478,14 +483,15 @@ avg_row_latex = (
     f"Averaged &  &  & {avg_aic:.1f} & {avg_div * 100:.1f}\\% \\\\"
 )
 
-latex_table = latex_table.replace("\\end{tabular}", avg_row_latex + "\n\\end{tabular}")
+latex_table = latex_table.replace("\\end{tabular}", avg_row_latex + "\n\\end{tabular}\n}")
 
-# 8) Save
-with open(f"table_path/category_level_results_2025-08-21.tex", "w") as f:
+with open(f"{table_path}/category_level_results_2025-08-21.tex", "w") as f:
     f.write(latex_table)
 
 
+
 # ------ SCRIPT 4 ------
+# Figure 8
 # Akaike weights stacked bar chart for all categories
 
 # Define file paths
@@ -578,7 +584,9 @@ output_file = f"{figure_path}/akaike_weights_all_categories.png"
 plt.savefig(output_file, dpi=300)
 
 
+
 # ------ SCRIPT 5 ------
+# Figure 7
 # Plots for diversion ratios to closest substitute
 
 selected_columns = [
@@ -589,8 +597,7 @@ selected_columns = [
     "Attribute-Based PCA Average of diversion ratios to closest substitute",
     
 ]
-df_plot = table_category_level[selected_columns]
-
+df_plot = table_category_level[selected_columns].copy()
 df_plot.set_index("Category_Label_Short", inplace=True)
 
 # Rename columns for clarity
@@ -602,27 +609,17 @@ df_plot.rename(
     },
     inplace=True,
 )
+
 # Ensure numeric and convert to %
 for col in ["plain_logit", "unstructured_data", "attr_based"]:
     if col not in df_plot.columns:
         df_plot[col] = np.nan
+        
 df_plot[["plain_logit", "unstructured_data", "attr_based"]] = \
     df_plot[["plain_logit", "unstructured_data", "attr_based"]].astype(float) * 100.0
 
-# Build desired order: (1) main cats on top (A→Z), (2) others A→Z below
-MAIN_CATS = {"13060404", "13060114", "13060701", "13110101"}
-is_main = df_plot["Category_Code"].isin(MAIN_CATS)
-labels_main = sorted(df_plot[is_main].index.tolist())
-labels_rest = sorted(df_plot[~is_main].index.tolist())
-top_to_bottom = labels_main + labels_rest
-
-def order_for_barh_top_to_bottom(df, labels_top_to_bottom):
-    """
-    barh draws the LAST index at the TOP. To have top_to_bottom visually,
-    reverse the index order after selecting.
-    """
-    existing = [lab for lab in labels_top_to_bottom if lab in df.index]
-    return df.loc[existing[::-1]]
+# Sort Z to A (reversed alphabetically) - barh will display this as A (top) to Z (bottom)
+df_plot = df_plot.sort_index(ascending=False)
 
 # Common plotting style
 mpl.rcParams["hatch.linewidth"] = 0.2
@@ -632,7 +629,7 @@ light_blue = "#c6dbef"   # Our Approach
 mid_blue   = "#6baed6"   # Attr-based
 dark_blue  = "#084594"   # Plain Logit
 
-def _final_touches(ax, title, nrows, xmin=-1):
+def _final_touches(ax, title, xmin=-1):
     # Y label size & grid
     ax.set_yticklabels(ax.get_yticklabels(), fontsize=8)
     ax.set_axisbelow(True)
@@ -649,9 +646,8 @@ def _final_touches(ax, title, nrows, xmin=-1):
     ax.set_ylabel("")
     ax.set_title(title)
 
-# 1) Plot ONLY PLAIN LOGIT ---
-def plot_plain_only(df, output_path=None):
-    plot_df = order_for_barh_top_to_bottom(df[["plain_logit", "Category_Code"]], top_to_bottom)
+# 1) Plot ONLY PLAIN LOGIT 
+def plot_plain_only(plot_df, output_path=None):
     vals = plot_df["plain_logit"].values
     labels = plot_df.index
 
@@ -659,17 +655,15 @@ def plot_plain_only(df, output_path=None):
     
     ax.barh(labels, vals, height=0.65, color=dark_blue, edgecolor="black", linewidth=0.6, label="Plain Logit")
 
-    _final_touches(ax, f"Predicted Diversion to Closest Substitute Across {len(df)} Categories", len(df))
+    _final_touches(ax, f"Predicted Diversion to Closest Substitute Across {len(plot_df)} Categories")
     ax.legend(loc="upper left", bbox_to_anchor=(1.05, 1), frameon=False)
     plt.tight_layout()
     if output_path:
         plt.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.show()
 
-# 2) Plot PLAIN LOGIT + OUR APPROACH for ALL categories (overlapped) ---
-def plot_plain_vs_unstructured(df, output_path=None):
-    plot_df = order_for_barh_top_to_bottom(df[["plain_logit", "unstructured_data", "Category_Code"]], top_to_bottom)
-
+# 2) Plot PLAIN LOGIT + OUR APPROACH 
+def plot_plain_vs_unstructured(plot_df, output_path=None):
     fig, ax = plt.subplots(figsize=(10, 6))
 
     # Background (Our Approach) hatched
@@ -681,28 +675,21 @@ def plot_plain_vs_unstructured(df, output_path=None):
             height=0.65, color=dark_blue, edgecolor="black", linewidth=0.6,
             label="Plain Logit")
 
-    _final_touches(ax, f"Predicted Diversion to Closest Substitute Across {len(df)} Categories", len(df))
+    _final_touches(ax, f"Predicted Diversion to Closest Substitute Across {len(plot_df)} Categories")
     ax.legend(loc="upper left", bbox_to_anchor=(1.05, 1), frameon=False)
     plt.tight_layout()
     if output_path:
         plt.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.show()
 
-
-
-# 3) Plot PLAIN + OUR for non-main; PLAIN + OUR + ATTR for main (layered, value-aware order) ---
-def plot_with_attr_for_main(df, output_path=None):
-    cols = ["plain_logit", "unstructured_data", "attr_based", "Category_Code"]
-    plot_df = order_for_barh_top_to_bottom(df[cols], top_to_bottom)
-
+# 3) Plot PLAIN LOGIT + OUR APPROACH + ATTIRIBUTES(for main electronic categories)
+def plot_with_attr_for_main(plot_df, output_path=None):
     idx = plot_df.index
     our = plot_df["unstructured_data"]
     plain = plot_df["plain_logit"]
-    # Only draw attr for MAIN_CATS; NaN for others means nothing is drawn
-    attr = plot_df["attr_based"].where(plot_df["Category_Code"].isin(MAIN_CATS), np.nan)
+    attr = plot_df["attr_based"]
 
     # Determine which series should be in the BACK (per-row)
-    # True where attr >= our (including equal); False otherwise (or NaN → False)
     mask_attr_back = (attr >= our).fillna(False)
     mask_our_back = ~mask_attr_back
 
@@ -712,20 +699,25 @@ def plot_with_attr_for_main(df, output_path=None):
     ax.set_axisbelow(True)
     ax.grid(True, linestyle="--", alpha=0.5, axis="both", zorder=0)
 
-    # Where OUR should be the background, ATTR overlays
-    ax.barh(idx[mask_our_back], our[mask_our_back].values,
+    # Create full-length arrays with NaN where we don't want to plot
+    our_back = our.where(mask_our_back, np.nan)
+    attr_over_our = attr.where(mask_our_back, np.nan)
+    
+    attr_back = attr.where(mask_attr_back, np.nan)
+    our_over_attr = our.where(mask_attr_back, np.nan)
+
+    # Plot all categories in order (NaN values won't be drawn)
+    ax.barh(idx, our_back.values,
             height=0.65, color=light_blue, edgecolor="black", linewidth=0.6, hatch="////",
             label="Our Approach", zorder=2)
-    ax.barh(idx[mask_our_back], attr[mask_our_back].values,
+    ax.barh(idx, attr_over_our.values,
             height=0.65, color=mid_blue, edgecolor="black", linewidth=0.6, 
-            # no label here to avoid duplicate legend
             zorder=3)
 
-    # Where ATTR should be the background, OUR overlays 
-    ax.barh(idx[mask_attr_back], attr[mask_attr_back].values,
+    ax.barh(idx, attr_back.values,
             height=0.65, color=mid_blue, edgecolor="black", linewidth=0.6,
             label="Standard Attributes", zorder=2)
-    ax.barh(idx[mask_attr_back], our[mask_attr_back].values,
+    ax.barh(idx, our_over_attr.values,
             height=0.65, color=light_blue, edgecolor="black", linewidth=0.6, hatch="////",
             zorder=3)
 
@@ -744,9 +736,9 @@ def plot_with_attr_for_main(df, output_path=None):
 
     ax.set_xlabel("Predicted Diversion (%)")
     ax.set_ylabel("")
-    ax.set_title(f"Predicted Diversion to Closest Substitute Across {len(df)} Categories")
+    ax.set_title(f"Predicted Diversion to Closest Substitute Across {len(plot_df)} Categories")
 
-    # Deduplicate legend handles (since some labels plotted twice)
+    # Deduplicate legend handles
     handles, labels = ax.get_legend_handles_labels()
     seen, handles_dedup, labels_dedup = set(), [], []
     for h, l in zip(handles, labels):
@@ -761,12 +753,18 @@ def plot_with_attr_for_main(df, output_path=None):
         plt.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.show()
 
+
 plot_plain_only(df_plot, output_path=os.path.join(figure_path, "diversion_plain_only.png"))
 plot_plain_vs_unstructured(df_plot, output_path=os.path.join(figure_path, "diversion_plain_vs_our.png"))
 plot_with_attr_for_main(df_plot, output_path=os.path.join(figure_path, "diversion_plain_vs_our_vs_attr.png"))
 
+
+
 # ------ SCRIPT 6 ------
+# Table A4
 # LaTeX table for AIC in main electronic categories
+
+MAIN_CATS = {"13060404", "13060114", "13060701", "13110101"}
 
 df = (
     table_category_level[
@@ -794,7 +792,7 @@ def f1(x):  # one-decimal formatting
 
 lines = []
 lines.append(r"\begin{centering}")
-lines.append(r"\begin{tabular}{>{\raggedright\arraybackslash}p{6cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{4cm}}")
+lines.append(r"\begin{tabular}{>{\raggedright\arraybackslash}p{6cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{3cm}}")
 lines.append(r"\hline")
 lines.append(r"& {\footnotesize{$AIC$}} & {\footnotesize{$\Delta AIC$}\textbf{ Relative to Plain Logit}}\tabularnewline")
 lines.append(r"\hline")
@@ -834,3 +832,235 @@ latex_table = "\n".join(lines)
 with open(f"{table_path}/main_electronic_categories_AIC.tex", "w", encoding="utf-8") as f:
     f.write(latex_table)
 
+
+# ------ SCRIPT 7 ------
+# Table A5, A6
+# LaTeX table for diversion matrices
+
+# Minimal LaTeX escaper for labels (protect & % _ #)
+def tex_escape(s):
+    s = str(s)
+    s = s.replace("\\", r"\textbackslash{}")
+    s = s.replace("&", r"\&").replace("%", r"\%").replace("$", r"\$").replace("#", r"\#")
+    s = s.replace("_", r"\_").replace("{", r"\{").replace("}", r"\}")
+    s = s.replace("~", r"\textasciitilde{}").replace("^", r"\textasciicircum{}")
+    return s
+
+
+def build_title_map(descr_csv_path: str):
+    # Expecting columns: asin, product_title
+    descr = pd.read_csv(descr_csv_path, dtype={"asin": str})
+    if "product_title" not in descr.columns:
+        raise ValueError("Expected a 'product_title' column in product_descriptions.csv")
+    descr = descr.drop_duplicates(subset=["asin"])
+    return dict(zip(descr["asin"].astype(str), descr["product_title"].astype(str)))
+
+def condense_title(raw: str) -> str:
+    """Heuristic short title generator matching your examples."""
+    s = raw or ""
+    # iPad variants
+    if "iPad" in s:
+        if re.search(r"9\.7|9.7", s):
+            return "iPad 9.7"
+        if re.search(r"10\.2|10.2", s):
+            return "iPad 10.2"
+        return "iPad 9.7" # fallback to 9.7 if no version found
+    # Amazon Fire variants
+    if "Fire 7" in s and "Kids" in s:
+        return "Fire 7 Kids"
+    if "Fire 7" in s:
+        return "Fire 7"
+    if "Fire HD 10" in s:
+        return "Fire HD 10"
+    if "Fire HD 8" in s and "Kids" in s:
+        return "Fire HD 8 Kids"
+    if "Fire HD 8" in s:
+        return "Fire HD 8"
+    # Dragon Touch
+    if "Dragon Touch" in s:
+        return "Dragon Touch"
+    # Return raw title if no known pattern matched
+    return s
+
+def split_title(t):
+    """
+    Returns (first_line, second_line) based on specific keywords:
+    - If contains "HD" and "Kids": split after "HD"
+    - If contains "HD": split after "HD"
+    - If contains "Kids": split before "Kids"
+    - If contains "iPad": first line is "iPad", rest is second line
+    - If contains "Dragon": split after "Dragon"
+    - Otherwise: return full title as first line, empty second line
+    """
+    # Priority order matters: HD+Kids check must come before individual checks
+    if "HD" in t and "Kids" in t:
+        # Split after "HD"
+        idx = t.find("HD") + len("HD")
+        return t[:idx].strip(), t[idx:].strip()
+    
+    elif "HD" in t:
+        # Split after "HD"
+        idx = t.find("HD") + len("HD")
+        return t[:idx].strip(), t[idx:].strip()
+    
+    elif "Kids" in t:
+        # Split before "Kids"
+        idx = t.find("Kids")
+        return t[:idx].strip(), t[idx:].strip()
+    
+    elif "iPad" in t:
+        # First line is "iPad", rest is second line
+        idx = t.find("iPad") + len("iPad")
+        return "iPad", t[idx:].strip()
+    
+    elif "Dragon" in t:
+        # Split after "Dragon"
+        idx = t.find("Dragon") + len("Dragon")
+        return t[:idx].strip(), t[idx:].strip()
+    
+    else:
+        # Single line, no split
+        return t, ""    
+    
+def get_concise_titled_mat(div):
+    
+    # Map product id to concise titles
+    crosswalk_path = os.path.join(intermediate_path, "13060404", "asin_to_item_crosswalk.csv")
+    # Crosswalk: product_id -> ASIN
+    crosswalk = pd.read_csv(crosswalk_path, dtype={"product_id": str, "asin_code": str})
+    crosswalk = crosswalk.drop_duplicates(subset=["product_id"])
+    pid_to_asin = dict(zip(crosswalk["product_id"], crosswalk["asin_code"]))
+
+    # Now map from ASIN to concise title
+    asin_to_title = build_title_map(os.path.join(input_path, "text_and_images", "13060404", "product_descriptions.csv"))
+    asins_we_need = set(pid_to_asin.values())
+    asin_to_title = {a: t for a, t in asin_to_title.items() if a in asins_we_need}
+
+    # Convert ASIN -> concise title 
+    asin_to_concise = {a: condense_title(t) for a, t in asin_to_title.items()}
+
+    # map PID -> concise title
+    pid_to_concise_title = {
+        pid: asin_to_concise.get(asin, asin)  # fallback to ASIN if not found
+        for pid, asin in pid_to_asin.items()
+    }
+
+    div_titled = div.copy()
+    div_titled.index = div_titled.index.astype(str).map(pid_to_concise_title)
+
+    # Rename columns (except the first column which holds row labels)
+    prod_cols = [c for c in div_titled.columns]
+    col_map = {pid: pid_to_concise_title.get(str(pid), str(pid)) for pid in prod_cols}
+    div_titled = div_titled.rename(columns=col_map)
+
+    return div_titled
+
+def generate_latex_table(M, output_tex):
+    
+    # Titles in the matrix 
+    titles = list(M.columns)
+
+    header_top = [""] + [split_title(t)[0] for t in titles]
+    header_bot = [""] + [split_title(t)[1] for t in titles]
+
+    # # Find column-wise maxima
+    # col_max = M.max(axis=0)
+    # is_max = M.ge(col_max - 1e-12)  # boolean dataframe; True where it's a max 
+
+    # Compose LaTeX
+    lines = []
+    lines.append(r"\footnotesize")
+    lines.append(r"\begin{tabular}{l|*{8}{>{\centering\arraybackslash}p{1.3cm}}}")
+    lines.append(r"\toprule")
+
+    # Header lines
+    lines.append(" " + " & ".join(tex_escape(h) for h in header_top) + r" \\ ")
+    lines.append(" " + " & ".join(tex_escape(h) for h in header_bot) + r" \\")
+    lines.append(r"\midrule")
+
+    # Body with rounding and coloring max cells
+    for row_label, row in M.iterrows():
+        row_cells = [tex_escape(row_label)]
+        for j, t in enumerate(titles):
+            val = row[t]
+            cell = f"{val:.3f}"
+            # if is_max.at[row_label, t]:
+            #     cell = r"\cellcolor{blue!15} " + cell
+            row_cells.append(cell)
+        lines.append(" & ".join(row_cells) + r" \\")
+        
+    lines.append(r"\bottomrule")
+    lines.append(r"\end{tabular}")
+
+    latex_table = "\n".join(lines)
+    Path(output_tex).write_text(latex_table, encoding="utf-8")
+
+def div_mat_with_titles_to_csv_tex(div, output_csv, output_tex):
+
+    # # Change Unnamed: 0 to product_id
+    div = div.rename(columns={"Unnamed: 0": "product_id"})
+
+    first_col = div.columns[0]
+    div = div.set_index(first_col)
+
+    # Drop product_id column if it exists in the dataframe
+    if "product_id" in div.columns:
+        div = div.drop(columns=["product_id"])
+
+    # Keep only numeric columns (product columns)
+    div_numeric = div.apply(pd.to_numeric, errors="coerce")
+
+    # Transpose the matrix so that column sums to 1
+    div_out = div_numeric.T
+
+    # Get concise titled matrix
+    div_titled = get_concise_titled_mat(div_out)
+
+    # Desired order
+    concise_titles_in_new_order = [
+        "Fire 7",
+        "Fire HD 8",
+        "Fire HD 10",
+        "Fire 7 Kids",
+        "iPad 10.2",
+        "Fire HD 8 Kids",
+        "Dragon Touch",
+        "iPad 9.7",
+    ]
+
+    index_names = set(div_titled.index.astype(str))
+    column_names = set(map(str, div_titled.columns))
+
+    if index_names != column_names:
+        missing_in_cols = sorted(index_names - column_names)
+        missing_in_rows = sorted(column_names - index_names)
+        print("Index/column labels differ.",
+            "Missing in columns:", missing_in_cols,
+            "Missing in rows:", missing_in_rows)
+
+    # Filter the requested order to what actually exists
+    final_order = [t for t in concise_titles_in_new_order if t in index_names]
+
+    # Reindex rows and columns to match the final order
+    out_df = div_titled.reindex(index=final_order, columns=final_order)
+    out_df.to_csv(output_csv, index=True)
+
+    generate_latex_table(out_df, output_tex)
+    print(f"Wrote {output_csv} and {output_tex}")
+
+div_mat_path = os.path.join(output_path, "elasticities", "13060404") 
+
+div_mat =  pd.read_csv(os.path.join(div_mat_path, "plain_logit_diversion_13060404.csv"))
+output_csv = os.path.join(div_mat_path, "plain_logit_diversion_with_titles_13060404.csv")
+output_tex = os.path.join(table_path, "diversion_matrices", "plain_logit_diversion_with_titles_13060404.tex")
+div_mat_with_titles_to_csv_tex(div_mat, output_csv, output_tex)
+
+div_mat =  pd.read_csv(os.path.join(div_mat_path, "pca_diversion_13060404.csv"))
+output_csv = os.path.join(div_mat_path, "pca_diversion_with_titles_13060404.csv")
+output_tex = os.path.join(table_path, "diversion_matrices", "pca_diversion_with_titles_13060404.tex")
+div_mat_with_titles_to_csv_tex(div_mat, output_csv, output_tex)
+
+div_mat =  pd.read_csv(os.path.join(div_mat_path, "attr_based_pca_diversion_13060404.csv"))
+output_csv = os.path.join(div_mat_path, "attr_based_pca_diversion_with_titles_13060404.csv")
+output_tex = os.path.join(table_path, "diversion_matrices", "attr_based_pca_diversion_with_titles_13060404.tex")
+div_mat_with_titles_to_csv_tex(div_mat, output_csv, output_tex)
