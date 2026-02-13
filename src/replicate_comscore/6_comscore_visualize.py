@@ -107,26 +107,11 @@ final_table.rename(
     columns={"First Choice AIC": "AIC", "Specification": "Model"}, inplace=True
 )
 
-# Ensure AIC column exists and compute AIC_min, Delta, ExpDelta, and Akaike_Weight
+# Ensure AIC column exists
 if "AIC" not in final_table.columns:
     raise ValueError("Column 'AIC' not found in the dataset.")
 
-# Group by Category_Code to perform within-group computations
-final_table["AIC_min"] = final_table.groupby("Category_Code")["AIC"].transform("min")
-final_table["Delta"] = final_table["AIC"] - final_table["AIC_min"]
-
-# Assert that Delta is non-negative
-assert (
-    final_table["Delta"] >= 0
-).all(), "Some Delta values are negative, which is unexpected."
-
-# Compute ExpDelta and Akaike_Weight
-final_table["ExpDelta"] = np.exp(-final_table["Delta"] / 2)
-final_table["Akaike_Weight"] = final_table.groupby("Category_Code")[
-    "ExpDelta"
-].transform(lambda x: x / x.sum())
-
-# Update Data_Type for rows where Model starts with "logit"
+# Update Data_Type for rows where Model starts with "plain"
 final_table.loc[final_table["Model"].str.startswith("plain"), "Data_Type"] = "logit"
 print(final_table["Model"].value_counts())
 print(final_table["Data_Type"].value_counts())
@@ -193,18 +178,43 @@ for code, categories in manual_category_mapping.items():
 columns_to_drop = ["cat_code1", "cat_code2", "cat_code3", "asin_code"]
 final_table = final_table.drop(columns=columns_to_drop, errors="ignore")
 
-# Create the second table by collapsing the data
-collapsed_table = final_table.groupby(
-    ["Category_Code", "Data_Type"], as_index=False
-).agg(
-    Total_Akaike_Weight=("Akaike_Weight", "sum"),
-    category1=("category1", "first"),
-    category2=("category2", "first"),
-    category3=("category3", "first"),
-    category4=("category4", "first"),
-    num_transactions=("num_transactions", "first"),
-    mean_price=("mean_price", "first"),
+# Four data types for Akaike weight comparison (leading spec per type)
+FOUR_DATA_TYPES = ["titles", "descriptions", "reviews", "images"]
+
+# Restrict to the four data types and keep only the leading (lowest AIC) spec per (Category_Code, Data_Type)
+four_types = final_table[final_table["Data_Type"].isin(FOUR_DATA_TYPES)].copy()
+leading_specs = (
+    four_types.groupby(["Category_Code", "Data_Type"], as_index=False)
+    .apply(lambda g: g.loc[g["AIC"].idxmin()])
+    .reset_index(drop=True)
 )
+
+# Among the four leading specs per category: AIC_min, Delta, ExpDelta, then Akaike Weight per data type
+leading_specs["AIC_min"] = leading_specs.groupby("Category_Code")["AIC"].transform(
+    "min"
+)
+leading_specs["Delta"] = leading_specs["AIC"] - leading_specs["AIC_min"]
+assert (leading_specs["Delta"] >= 0).all(), "Some Delta values are negative."
+leading_specs["ExpDelta"] = np.exp(-leading_specs["Delta"] / 2)
+leading_specs["Akaike_Weight"] = leading_specs.groupby("Category_Code")[
+    "ExpDelta"
+].transform(lambda x: x / x.sum())
+
+# Second table: one row per (Category_Code, Data_Type) for the four types, with Total_Akaike_Weight
+collapsed_table = leading_specs[
+    [
+        "Category_Code",
+        "Data_Type",
+        "Akaike_Weight",
+        "category1",
+        "category2",
+        "category3",
+        "category4",
+        "num_transactions",
+        "mean_price",
+    ]
+].copy()
+collapsed_table = collapsed_table.rename(columns={"Akaike_Weight": "Total_Akaike_Weight"})
 
 # Format Total_Akaike_Weight to three decimal points
 collapsed_table["Total_Akaike_Weight"] = collapsed_table["Total_Akaike_Weight"].map(
@@ -233,10 +243,10 @@ wide_table = wide_table.merge(
     how="left",
 )
 
-# Add the "sum_check" column to verify row sums
-column_order = ["images", "titles", "descriptions", "reviews", "logit", "observables"]
-# Fill missing values of observables with 0
-wide_table["observables"] = wide_table["observables"].fillna(0)
+# Add the "sum_check" column to verify row sums (four data types only; weights sum to 1)
+column_order = ["images", "titles", "descriptions", "reviews"]
+if "observables" in wide_table.columns:
+    wide_table["observables"] = wide_table["observables"].fillna(0)
 print(wide_table.info())
 wide_table[column_order] = wide_table[column_order].astype(float, errors="ignore")
 wide_table["sum_check"] = wide_table[column_order].sum(axis=1)
@@ -334,7 +344,11 @@ table_labeled["Model_Type"] = table_labeled.apply(assign_model_type, axis=1)
 # (Temporary) Drop models that combine both text and image embeddings
 table_labeled = table_labeled[table_labeled["Model_Type"] != "All Models"]
 
-# Collapse table_labeled by keeping the row with the greatest Delta within each Category_Code
+# Compute AIC_min and Delta so we can keep the best (lowest AIC) model per category
+table_labeled["AIC_min"] = table_labeled.groupby("Category_Code")["AIC"].transform("min")
+table_labeled["Delta"] = table_labeled["AIC"] - table_labeled["AIC_min"]
+
+# Collapse table_labeled by keeping the row with the smallest Delta (best AIC) within each Category_Code
 idx_max_div = table_labeled.groupby("Category_Code")["Delta"].idxmin()
 table_labeled = table_labeled.loc[idx_max_div]
 
