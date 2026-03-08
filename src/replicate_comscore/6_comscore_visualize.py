@@ -33,8 +33,8 @@ os.makedirs(summary_path, exist_ok=True)
 # ------ SCRIPT 1 ------
 # Compute and save three tables: final_table, collapsed_table, wide_table
 
-# Set the root directory to search
-root_directory = figure_path = os.path.join(output_path, "estimation_results")
+# Set the root directory to search (do not overwrite figure_path)
+root_directory = os.path.join(output_path, "estimation_results")
 
 xlsx_pattern = "mixed_logit_results_*.xlsx"
 
@@ -510,7 +510,7 @@ with open(f"{table_path}/category_level_results_2025-08-21.tex", "w") as f:
 
 # Define file paths
 wide_table_path = f"{summary_path}/wide_table_2025-08-21.csv"
-output_file = f"{summary_path}/akaike_weights_all_categories.png"
+output_file = f"{figure_path}/akaike_weights_all_categories.png"
 
 # Load the data
 wide_table = pd.read_csv(wide_table_path)
@@ -550,6 +550,10 @@ filtered_table = filtered_table.sort_values(by="images", ascending=True)
 
 # Reorder the columns for the desired stacking order
 filtered_table = filtered_table[["images", "titles", "descriptions", "reviews"]]
+
+# Save the weights used to build the graph to CSV
+akaike_weights_csv_path = os.path.join(summary_path, "akaike_weights_all_categories.csv")
+filtered_table.reset_index().to_csv(akaike_weights_csv_path, index=False)
 
 # Define custom colors
 colors = [
@@ -594,7 +598,6 @@ plt.legend(title="Data Types", bbox_to_anchor=(1.05, 1), loc="upper left")
 plt.tight_layout()
 
 # Save the plot to the specified file
-output_file = f"{figure_path}/akaike_weights_all_categories.png"
 plt.savefig(output_file, dpi=300)
 
 
