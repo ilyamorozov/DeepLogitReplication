@@ -40,8 +40,8 @@ In the project root directory, run the following Python scripts:
 python -m src.replicate_comscore.2_comscore_generate_embeddings
 python -m src.replicate_comscore.3_comscore_prepare_embeddings
 python -m src.replicate_comscore.4_comscore_estimation_mixed_logit
-python -m src.replicate_comscore.5_comscore_visualize
-python -m src.replicate_comscore.6_comscore_elasticities
+python -m src.replicate_comscore.5_comscore_elasticities
+python -m src.replicate_comscore.6_comscore_visualize
 ```
 ## References
 
