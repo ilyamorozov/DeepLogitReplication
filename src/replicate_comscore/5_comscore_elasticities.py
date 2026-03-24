@@ -351,14 +351,14 @@ def main():
 
     date = "2025-08-21"
 
-    input_path = get_file_path_from_config(path_type="COMSCORE_6", path="INPUT_PATH")
-    intermediate_path = get_file_path_from_config(path_type="COMSCORE_6", path="INTERMEDIATE_PATH")
-    estimate_results_path = get_file_path_from_config(path_type="COMSCORE_6", path="RESULT_PATH")
-    output_path = get_file_path_from_config(path_type="COMSCORE_6", path="OUTPUT_PATH")
+    input_path = get_file_path_from_config(path_type="COMSCORE_5", path="INPUT_PATH")
+    intermediate_path = get_file_path_from_config(path_type="COMSCORE_5", path="INTERMEDIATE_PATH")
+    estimate_results_path = get_file_path_from_config(path_type="COMSCORE_5", path="RESULT_PATH")
+    output_path = get_file_path_from_config(path_type="COMSCORE_5", path="OUTPUT_PATH")
 
-    # D = 10000  # Switch to 10,000 for final run
-    # save_elasticities_df = True
-    # save_diversion_df = True
+    D = 10000  # Switch to 10,000 for final run
+    save_elasticities_df = True
+    save_diversion_df = True
 
     categories = load_comscore_categories(input_path)
     diversions_summary = {}
@@ -405,7 +405,6 @@ def main():
             num_starting_points=100,
             seed=1,
             halton=False,
-            aic=True,
         )
         s_unconditional = predict_mixed_logit(plain_logit_model, choice_data, varnames)
         plain_logit_diversion_matrix = generate_predicted_diversion_matrix(
@@ -442,6 +441,16 @@ def main():
         sd_var = {k[3:]: v for k, v in sd_var.items()}
         randvars = {var: "n" for var in sd_var}
 
+        # Validate that all randvars are in pc_varnames
+        missing = set(randvars.keys()) - set(pc_varnames)
+        if missing:
+            print(f"[WARNING] randvars keys not in pc_varnames: {missing}")
+            print(f"  randvars keys: {list(randvars.keys())}")
+            print(f"  pc_varnames (last {k+1}): {pc_varnames[-(k+1):]}")
+            # Filter to only valid randvars
+            randvars = {var: "n" for var in randvars if var in pc_varnames}
+            print(f"  Filtered randvars: {list(randvars.keys())}")
+
         best_model = estimate_mixed_logit(
             choice_data,
             varnames=pc_varnames,
@@ -450,7 +459,6 @@ def main():
             num_starting_points=100,
             seed=1,
             halton=False,
-            aic=True,
         )
 
         if not np.isclose(best_model.aic, model_AIC, rtol=1e-6, atol=1e-8):
@@ -487,6 +495,12 @@ def main():
             sd_var_attr = {k[3:]: v for k, v in sd_var_attr.items()}
             randvars_attr = {var: "n" for var in sd_var_attr}
 
+            # Validate that all randvars are in attr_varnames
+            missing_attr = set(randvars_attr.keys()) - set(attr_varnames)
+            if missing_attr:
+                print(f"[WARNING] attr randvars keys not in attr_varnames: {missing_attr}")
+                randvars_attr = {var: "n" for var in randvars_attr if var in attr_varnames}
+
             attr_model = estimate_mixed_logit(
                 choice_data,
                 varnames=attr_varnames,
@@ -495,7 +509,6 @@ def main():
                 num_starting_points=100,
                 seed=1,
                 halton=False,
-                aic=True,
             )
 
             if not np.isclose(attr_model.aic, attr_model_AIC, rtol=1e-6, atol=1e-8):
@@ -521,13 +534,13 @@ def main():
             )
 
         # # 3. Compute elasticities matrix
-        # elasticities_matrix = compute_elasticities_matrix_parallel(
-        #     choice_data, model_coeff, D=D
-        # )
-        # if save_elasticities_df:
-        #     save_matrix_to_csv(
-        #         elasticities_matrix, choice_data, output_path, category, "elasticities"
-        #     )
+        elasticities_matrix = compute_elasticities_matrix_parallel(
+            choice_data, model_coeff, D=D
+        )
+        if save_elasticities_df:
+            save_matrix_to_csv(
+                elasticities_matrix, choice_data, output_path, category, "elasticities"
+            )
 
         diversions_summary[category] = {
             "Model": model_str.split("-")[0],
@@ -584,9 +597,9 @@ def main():
         )
 
     diversions_summary_df = pd.DataFrame(diversions_summary).T
-    # diversions_summary_df.to_csv(
-    #     os.path.join(output_path, "diversions_summary.csv"), index=True
-    # )
+    diversions_summary_df.to_csv(
+        os.path.join(output_path, "diversions_summary.csv"), index=True
+    )
     print("All categories processed.")
 
     #     elasticities_summary_df = pd.DataFrame(elasticities_summary).T

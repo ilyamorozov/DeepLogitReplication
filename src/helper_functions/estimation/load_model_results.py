@@ -6,14 +6,18 @@ def parse_coefficients_as_dict(coeff_names_str, coeff_values_str):
     """
     Given two strings that look like:
         coeff_names_str  -> "['product_id_3' 'product_id_8' 'price' ...]"
+                        or  "['product_id_3', 'product_id_8', 'price', ...]"
         coeff_values_str -> "[ 0.55129951 -0.49843977 -0.01164972 ...]"
     parse them into a Python dictionary: {name: value, ...}.
+
+    Handles both numpy-style (space-separated) and Python list-style
+    (comma-separated) string representations.
     """
-    # Remove the '[' and ']' and split
-    # Then split on whitespace
-    names_clean = coeff_names_str.strip("[]").split()
-    coeff_names = [token.strip("'") for token in names_clean]
-    values_clean = coeff_values_str.strip("[]").split()
+    # Remove brackets, strip commas so both formats parse correctly,
+    # then split on whitespace
+    names_clean = coeff_names_str.strip("[]").replace(",", " ").split()
+    coeff_names = [token.strip("'\"") for token in names_clean]
+    values_clean = coeff_values_str.strip("[]").replace(",", " ").split()
     coeff_values = [float(x) for x in values_clean]
 
     coeff_dict = dict(zip(coeff_names, coeff_values))

@@ -40,8 +40,12 @@ def compute_principal_components(
         scaler = StandardScaler()
         embedding_matrix_scaled = scaler.fit_transform(embedding_matrix)
 
+        # Cap components at the minimum of number of samples and number of features
+        possible_components = min(embedding_matrix_scaled.shape[0], embedding_matrix_scaled.shape[1])
+        num_components_actual = min(num_components, possible_components)
+
         # Initialize and fit PCA
-        pca = PCA(n_components=num_components, svd_solver="full")
+        pca = PCA(n_components=num_components_actual, svd_solver="full")
         principal_components = pca.fit_transform(embedding_matrix_scaled)
 
         # Store the principal components
