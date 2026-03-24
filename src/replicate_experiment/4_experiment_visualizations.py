@@ -778,6 +778,7 @@ def main(num_pcs: int = 6):
             selected_y_error=float(best_aic_dict[classify_subheading(model_name)][model_name]["second_choice_mae"])    
         )
 
+    # Figure 2: second_choice_rmse_best_rmse.png
     figure_requests = [
         ("first_choice_ll", "best_aic", "first_choice_ll_best_aic.png"),
         ("first_choice_aic", "best_aic", "first_choice_aic_best_aic.png"),
@@ -936,6 +937,7 @@ def plot_principal_components(pc_path, output_path, book_info_path):
 if __name__ == "__main__":
     main(num_pcs=6)
 
+    # Figure 4: PC1_PC2.png
     pc_path = get_file_path_from_config(path_type="EXPERIMENT_4", path="PC_DIR")
     output_path = get_file_path_from_config(path_type="EXPERIMENT_4", path="OUTPUT_PC_FIGURE")
     book_info_path = get_file_path_from_config(path_type="EXPERIMENT_4", path="BOOKS_CSV_PATH")

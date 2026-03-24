@@ -294,7 +294,7 @@ summary_stats = pd.concat([summary_stats, percentiles], axis=1)
 print(summary_stats)
 
 # ------ SCRIPT 2 ------
-# Figure A5
+# Figure A6
 # Histogram of differences between the best unstructured data model and plain logit for each category
 
 # Define file paths
@@ -434,7 +434,7 @@ kde_path = f"{figure_path}/aic_histogram.png"
 plt.savefig(kde_path, dpi=300)
 
 # ------ SCRIPT 3 ------
-# Table A3
+# Table A5
 # LaTeX table of AIC improvement and increase in predicted diversion to closest substitute for all categories
 
 # Merge with category labels to add Category_Label_Short
@@ -505,7 +505,7 @@ with open(f"{table_path}/category_level_results_2025-08-21.tex", "w") as f:
 
 
 # ------ SCRIPT 4 ------
-# Figure 8
+# Figure 7
 # Akaike weights stacked bar chart for all categories
 
 # Define file paths
@@ -603,7 +603,7 @@ plt.savefig(output_file, dpi=300)
 
 
 # ------ SCRIPT 5 ------
-# Figure 7
+# Figure 6
 # Plots for diversion ratios to closest substitute
 
 selected_columns = [
@@ -778,7 +778,7 @@ plot_with_attr_for_main(df_plot, output_path=os.path.join(figure_path, "diversio
 
 
 # ------ SCRIPT 6 ------
-# Table A4
+# Table 3
 # LaTeX table for AIC in main electronic categories
 
 MAIN_CATS = {"13060404", "13060114", "13060701", "13110101"}
@@ -851,7 +851,7 @@ with open(f"{table_path}/main_electronic_categories_AIC.tex", "w", encoding="utf
 
 
 # ------ SCRIPT 7 ------
-# Table A5, A6
+# Table A2, Table A3, Table A4
 # LaTeX table for diversion matrices
 
 # Minimal LaTeX escaper for labels (protect & % _ #)

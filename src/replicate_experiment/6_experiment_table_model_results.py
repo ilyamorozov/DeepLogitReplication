@@ -203,13 +203,13 @@ def generate_mixed_logit_table(xlsx_path, output_tex_validation, output_tex_sele
     lines.append(r"\endgroup")
     lines.append(r"}")
 
-    # 11. Write out
+    # 11. Write out Table A1: model_validation_results.tex
     with open(output_tex_validation, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
 
     print(f"Successfully wrote single-table LaTeX with Panels A/B/C to '{output_tex_validation}'")
 
-    # 12. Build the LaTeX lines for Selected Models AIC Summary
+    # 12. Build Table 1: selected_models_aic_summary.tex
     lines = []
     lines.append(r"\begin{centering}")
     lines.append(r"\begin{tabular}{>{\raggedright}p{7.5cm}>{\raggedright}p{3.5cm}>{\centering}p{1.5cm}>{\centering}p{1.5cm}}")

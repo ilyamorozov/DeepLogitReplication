@@ -22,6 +22,7 @@ def fmt_percent(x, decimals=1):
         return f"{x:.3f}\\%"
 
 def main(file_path, output_dir, tex_dir):
+    # Figure A1: merger_simulation_8.png (and other merger simulation figures)
     # Load the data
     df = pd.read_csv(file_path, delimiter=",")
 

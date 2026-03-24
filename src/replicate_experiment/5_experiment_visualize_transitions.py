@@ -191,7 +191,7 @@ def visualize_transitions(file_path, output_dir):
     final_table.to_excel(output_file, index=False)
 
 
-# NEW
+# Table 2: first_three_products.tex
 def generate_fancy_latex(xlsx_path, output_path):
     df = pd.read_excel(xlsx_path)
     df = df.applymap(lambda x: x.replace("&", r"\&") if isinstance(x, str) else x)

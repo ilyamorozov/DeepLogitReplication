@@ -15,7 +15,7 @@ data = pd.read_csv(f"{data_dir}ebook_survey_data_cleaned.csv")
 output_dir = get_file_path_from_config(path_type="EXPERIMENT_9", path="OUTPUT_DIR")
 os.makedirs(output_dir, exist_ok=True)
 
-# A1
+# Figure A2 (Top: total_time_spent.png, Bottom: time_spent_choice_tasks.png)
 
 # Convert time in seconds to minutes for duration and for choice task timings
 data["duration_minutes"] = data["duration_(in_seconds)"] / 60
@@ -79,7 +79,7 @@ plt.tight_layout()
 
 plt.savefig(f"{output_dir}time_spent_choice_tasks.png")
 
-# A2
+# Figure A3 (first_choice_genre_vs_self_reported_genre.png)
 
 # Mapping ranks to genres based on the user-provided genre rankings
 genre_ranking_map = {
@@ -230,7 +230,7 @@ plt.legend(
 plt.tight_layout()
 plt.savefig(f"{output_dir}first_choice_genre_vs_self_reported_genre.png", dpi=300)
 
-# A3
+# Figure A4 (first_choice_genre_vs_second_choice_genre.png)
 
 data["second_choice_genre"] = data["selected_id_2"].map(id_genre_mapping)
 
@@ -325,7 +325,7 @@ plt.tight_layout()
 plt.savefig(f"{output_dir}first_choice_genre_vs_second_choice_genre.png", dpi=300)
 
 
-# A4
+# Figure A5 (explained_variance_cumulative_by_type.png)
 
 # Mapping model names to display names
 # Used later when generating figures
